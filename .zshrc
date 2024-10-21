@@ -82,18 +82,13 @@ setopt hist_find_no_dups
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 zstyle ':completion:*' menu no
-zstyle ':fzf-tab:complete:cd:*' fzf-preview 'lsd --group-directories-first $realpath'
-zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'lsd --group-directories-first $realpath'
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls -G $realpath'
+zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls -G $realpath'
 
 # Aliases
 alias c='clear'
-alias x='exit'
-alias ls='lsd --group-directories-first'
-alias la='lsd --group-directories-first -A'
-alias ll='lsd --group-directories-first -l'
-alias lla='lsd --group-directories-first -lA'
-alias tree='lsd --tree --depth 2 --group-directories-first'
-alias cat='bat -p'
+alias ls='ls -G'
+alias la='ls -GAlh'
 alias vim='nvim'
 
 # Shell integrations
