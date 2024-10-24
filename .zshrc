@@ -59,11 +59,6 @@ bindkey -e
 bindkey '^p' history-search-backward
 bindkey '^n' history-search-forward
 bindkey '^[w' kill-region
-bindkey '^y' yank
-bindkey "^b" backward-word
-bindkey '^f' forward-word
-bindkey '^a' beginning-of-line
-bindkey '^e' end-of-line
 
 # History
 HISTSIZE=5000
@@ -82,24 +77,25 @@ setopt hist_find_no_dups
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 zstyle ':completion:*' menu no
-zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls -G $realpath'
-zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls -G $realpath'
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
+zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 
 # Aliases
 alias c='clear'
-alias ls='ls -G'
-alias la='ls -GAlh'
+alias ls='ls --color'
+alias la='ls --color -Alh'
 alias vim='nvim'
 
 # Shell integrations
+# FZF
 eval "$(fzf --zsh)"
+
+# Zoxide
 eval "$(zoxide init --cmd cd zsh)"
 
-# Pyenv
-export PYENV_ROOT="$HOME/.pyenv"
-export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init --path)"
-eval "$(pyenv init -)"
+# UV
+eval "$(uv generate-shell-completion zsh)"
+eval "$(uvx --generate-shell-completion zsh)"
 
 # NVM
 export NVM_DIR="$HOME/.nvm"
