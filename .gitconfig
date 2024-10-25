@@ -5,3 +5,10 @@
 [core]
 	autocrlf = input
 	safecrlf = true
+[alias]
+	st = status
+	ci = commit
+	co = checkout
+	br = branch
+	unstage = reset HEAD --
+	last = log -1 HEAD
