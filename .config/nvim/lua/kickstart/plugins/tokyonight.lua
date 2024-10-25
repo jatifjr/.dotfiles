@@ -7,16 +7,13 @@ return {
     'folke/tokyonight.nvim',
     priority = 1000, -- Make sure to load this before all the other start plugins.
     init = function()
+      -- Configure transparency before loading the colorscheme
+      require('tokyonight').setup {
+        transparent = true, -- Enable transparency
+      }
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-
-      -- Set up tokyonight with transparency enabled
-      require('tokyonight').setup {
-        -- transparent = true, -- Enable transparency
-        -- You can also set other options like style here if needed
-      }
-
       vim.cmd.colorscheme 'tokyonight'
 
       -- You can configure highlights by doing something like:
