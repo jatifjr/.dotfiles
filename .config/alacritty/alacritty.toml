@@ -43,6 +43,8 @@ shape = "Block"
 
 [keyboard]
 bindings = [
+  { key = "N", mods = "Command", action = "None" },  # Disable Command + N (Create new instance)
+  { key = "W", mods = "Command", action = "None" },  # Disable Command + W (Close window)
   # { key = "B", mods = "Alt", chars = "\u001BB" },  # Alt + B (Move backward one word)
   # { key = "F", mods = "Alt", chars = "\u001BF" },  # Alt + F (Move forward one word)
   # { key = "D", mods = "Alt", chars = "\u001BD" },  # Alt + D (Delete the word after the cursor)
@@ -66,11 +68,11 @@ semantic_escape_chars = ",│`|:\"' ()[]{}<>"
 
 [shell]
 program = "/opt/homebrew/bin/tmux"
-args = ["-u", "new", "-A", "-s", "main"]
+args = ["-u", "new", "-A"]
 
 [window]
 decorations = "Buttonless"
-opacity = 0.90
+opacity = 0.80
 startup_mode = "Windowed"
 option_as_alt = "OnlyLeft"
 dynamic_padding = true
