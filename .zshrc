@@ -85,6 +85,7 @@ alias c='clear'
 alias ls='ls --color'
 alias la='ls --color -Alh'
 alias vim='nvim'
+alias tx='tmux -u new -A'
 
 # Shell integrations
 # fzf
