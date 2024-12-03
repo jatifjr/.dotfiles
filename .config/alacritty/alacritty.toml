@@ -69,7 +69,7 @@ semantic_escape_chars = ",│`|:\"' ()[]{}<>"
 
 [window]
 decorations = "Buttonless"
-opacity = 1.00
+opacity = 0.67
 startup_mode = "Windowed"
 option_as_alt = "OnlyLeft"
 dynamic_padding = true
@@ -79,8 +79,8 @@ dynamic_padding = true
 #lines = 60
 
 [window.padding]
-x = 8
-y = 8
+x = 4
+y = 4
 
 [general]
 live_config_reload = true
