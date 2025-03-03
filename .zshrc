@@ -84,6 +84,7 @@ zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 alias c='clear'
 alias ls='ls --color'
 alias la='ls --color -Alh'
+alias top='top'
 alias vim='nvim'
 alias tx='tmux -u new -A'
 
@@ -104,3 +105,6 @@ export PYENV_ROOT="$HOME/.pyenv"
 [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
 eval "$(pyenv init --path)"
+
+# To customize prompt, run `p10k configure` or edit ~/.dotfiles/.p10k.zsh.
+[[ ! -f ~/.dotfiles/.p10k.zsh ]] || source ~/.dotfiles/.p10k.zsh

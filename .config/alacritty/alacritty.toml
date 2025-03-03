@@ -32,7 +32,7 @@ y = 0
 [cursor]
 blink_interval = 500
 blink_timeout = 5
-unfocused_hollow = false
+unfocused_hollow = true
 
 [cursor.style]
 blinking = "Off"
