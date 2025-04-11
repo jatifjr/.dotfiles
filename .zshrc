@@ -10,7 +10,7 @@ if [[ -f "/opt/homebrew/bin/brew" ]] then
   eval "$(/opt/homebrew/bin/brew shellenv)"
 fi
 
-export EDITOR=nvim
+export EDITOR=vim
 
 # Set the directory we want to store zinit and plugins
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
@@ -84,9 +84,6 @@ zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 alias c='clear'
 alias ls='ls --color'
 alias la='ls --color -Alh'
-alias top='top'
-alias vim='nvim'
-alias tx='tmux -u new -A'
 
 # Shell integrations
 # fzf
