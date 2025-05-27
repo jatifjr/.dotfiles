@@ -1,0 +1,51 @@
+# This is Git's per-user configuration file.
+[user]
+	name = Fajar Kusumajati
+	email = fajarku26@gmail.com
+	github = jatifjr
+
+[color]
+    ui = auto
+
+[core]
+    editor = nvim
+    autocrlf = input
+
+[alias]
+    co = checkout
+    br = branch
+    ci = commit
+    st = status
+    last = log -1 HEAD
+    lg = log --oneline --graph --decorate --all
+    amend = commit --amend
+    unstage = reset HEAD --
+    hist = log --pretty=format:'%h %ad | %s%d [%an]' --graph --date=short
+
+[pull]
+    rebase = true
+
+[rebase]
+    autoStash = true
+
+[push]
+    default = simple
+
+[merge]
+    tool = vimdiff
+    conflictstyle = diff3
+
+[fetch]
+    prune = true
+
+[diff]
+    tool = vimdiff
+
+[rerere]
+    enabled = true
+
+[credential]
+    helper = osxkeychain
+
+[init]
+    defaultBranch = main

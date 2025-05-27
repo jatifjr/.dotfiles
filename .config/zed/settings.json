@@ -1,0 +1,70 @@
+// Zed settings
+//
+// For information on how to configure Zed, see the Zed
+// documentation: https://zed.dev/docs/configuring-zed
+//
+// To see all of Zed's default settings without changing your
+// custom settings, run `zed: open default settings` from the
+// command palette (cmd-shift-p / ctrl-shift-p)
+{
+  "base_keymap": "VSCode",
+  "vim_mode": true,
+  "ui_font_family": "SF Pro",
+  "ui_font_size": 14,
+  "buffer_font_family": "SFMono Nerd Font",
+  "buffer_font_size": 14,
+  "relative_line_numbers": true,
+  "cursor_blink": false,
+  "hide_mouse": "on_typing",
+  "theme": {
+    "mode": "system",
+    "light": "v0-light",
+    "dark": "v0-dark"
+  },
+  "scrollbar": {
+    "show": "never"
+  },
+  "tab_bar": {
+    "show": false,
+    "show_nav_history_buttons": false,
+    "show_tab_bar_buttons": false
+  },
+  "toolbar": {
+    "breadcrumbs": false,
+    "quick_actions": false,
+    "selections_menu": false
+  },
+  "auto_install_extensions": {
+    "v0-theme": true,
+    "git-firefly": true
+  },
+  "format_on_save": "on",
+  "terminal": {
+    "button": false,
+    "env": {
+      "EDITOR": "zed --wait"
+    }
+  },
+  "features": {
+    "edit_prediction_provider": "copilot"
+  },
+  "show_edit_predictions": true,
+  "agent": {
+    "button": false,
+    "model_parameters": [],
+    "default_model": {
+      "provider": "copilot_chat",
+      "model": "claude-3.7-sonnet"
+    },
+    "version": "2"
+  },
+  "collaboration_panel": {
+    "button": false
+  },
+  "notification_panel": {
+    "button": false
+  },
+  "outline_panel": {
+    "button": false
+  }
+}
