@@ -47,6 +47,10 @@ zinit snippet OMZP::git
 zinit snippet OMZP::sudo
 zinit snippet OMZP::command-not-found
 
+# pnpm
+zinit ice as"completion"
+zinit snippet ${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/completions/_pnpm
+
 # Add in zsh plugins
 zinit light zsh-users/zsh-completions
 zinit light zsh-users/zsh-autosuggestions
@@ -96,9 +100,9 @@ alias la='ls --color -Alh'
 # --------------------------------------------------------------------
 
 # Docker
-if command -v docker &> /dev/null; then
-  docker context use default &> /dev/null
-fi
+# if command -v docker &> /dev/null; then
+#   docker context use default &> /dev/null
+# fi
 
 # Node Version Manager (nvm)
 export NVM_DIR="$HOME/.nvm"
