@@ -15,31 +15,39 @@
       "model": "claude-sonnet-4",
       "provider": "copilot_chat"
     },
+    "default_width": 320,
     "dock": "left",
-    "model_parameters": []
+    "model_parameters": [],
+    "play_sound_when_agent_done": true
   },
   "auto_install_extensions": {
     "catppuccin-blur": true,
-    "git-firefly": true
+    "git-firefly": true,
+    "symbols": true
   },
   "base_keymap": "VSCode",
-  "buffer_font_family": "SFMono Nerd Font",
-  "buffer_font_size": 14,
+  "buffer_font_family": "SF Mono",
+  "buffer_font_size": 13,
   "collaboration_panel": {
     "button": false
   },
   "cursor_blink": false,
+  "debugger": {
+    "button": false
+  },
   "features": {
     "edit_prediction_provider": "supermaven"
   },
   "format_on_save": "on",
   "git_panel": {
+    "button": false,
+    "default_width": 320,
     "dock": "right"
   },
   "hide_mouse": "on_typing",
   "icon_theme": {
     "dark": "Symbols Icon Theme",
-    "light": "Zed (Default)",
+    "light": "Symbols Icon Theme",
     "mode": "system"
   },
   "notification_panel": {
@@ -50,10 +58,14 @@
   },
   "project_panel": {
     "auto_fold_dirs": false,
+    "button": false,
     "default_width": 240,
     "dock": "right",
     "hide_root": true,
     "sticky_scroll": false
+  },
+  "search": {
+    "button": false
   },
   "relative_line_numbers": true,
   "scrollbar": {
@@ -67,8 +79,12 @@
   },
   "terminal": {
     "button": false,
+    "default_height": 240,
     "env": {
       "EDITOR": "zed --wait"
+    },
+    "toolbar": {
+      "breadcrumbs": false
     }
   },
   "theme": {
