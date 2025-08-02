@@ -1,2 +1,0 @@
-keybind = global:unconsumed:ctrl+alt+shift+a=reload_config
-keybind = global:ctrl+alt+shift+t=toggle_quick_terminal
