@@ -9,7 +9,6 @@
   // command palette (cmd-shift-p / ctrl-shift-p)
 
   "agent": {
-    "always_allow_tool_actions": true,
     "button": false,
     "default_model": {
       "model": "claude-sonnet-4",
@@ -35,6 +34,9 @@
   "debugger": {
     "button": false
   },
+  // "experimental.theme_overrides": {
+  //   "background.appearance": "transparent"
+  // },
   "features": {
     "edit_prediction_provider": "supermaven"
   },
