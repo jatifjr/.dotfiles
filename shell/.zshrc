@@ -89,6 +89,15 @@ zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
 zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 
 # --------------------------------------------------------------------
+# Shell Integrations
+# --------------------------------------------------------------------
+# fzf - fuzzy finder
+eval "$(fzf --zsh)"
+
+# zoxide - smarter cd command
+eval "$(zoxide init --cmd cd zsh)"
+
+# --------------------------------------------------------------------
 # Aliases
 # --------------------------------------------------------------------
 alias c='clear'
@@ -128,16 +137,8 @@ export GOBIN=$GOPATH/bin
 export PATH=$PATH:$GOBIN
 
 # --------------------------------------------------------------------
-# Shell Integrations
-# --------------------------------------------------------------------
-# fzf - fuzzy finder
-eval "$(fzf --zsh)"
-
-# zoxide - smarter cd command
-eval "$(zoxide init --cmd cd zsh)"
-
-# --------------------------------------------------------------------
 # Prompt Configuration
 # --------------------------------------------------------------------
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+

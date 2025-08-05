@@ -11,8 +11,8 @@
   "agent": {
     "button": false,
     "default_model": {
-      "model": "claude-sonnet-4",
-      "provider": "copilot_chat"
+      "model": "claude-sonnet-4-thinking",
+      "provider": "zed.dev"
     },
     "default_width": 320,
     "dock": "left",

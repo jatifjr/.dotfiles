@@ -22,7 +22,7 @@ vim.o.showmode = false
 
 -- Sync clipboard between OS and Neovim
 vim.schedule(function()
-  vim.o.clipboard = 'unnamedplus'
+    vim.o.clipboard = 'unnamedplus'
 end)
 
 -- Enable break indent
@@ -80,31 +80,16 @@ vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right win
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
--- [[ Appearance ]]
--- Make background transparent
-vim.api.nvim_create_autocmd('ColorScheme', {
-  desc = 'Make background transparent',
-  group = vim.api.nvim_create_augroup('transparent-bg', { clear = true }),
-  callback = function()
-    vim.api.nvim_set_hl(0, 'Normal', { bg = 'NONE' })
-    vim.api.nvim_set_hl(0, 'NormalFloat', { bg = 'NONE' })
-    vim.api.nvim_set_hl(0, 'SignColumn', { bg = 'NONE' })
-    vim.api.nvim_set_hl(0, 'EndOfBuffer', { bg = 'NONE' })
-  end,
-})
-
--- Apply transparent background immediately
-vim.api.nvim_set_hl(0, 'Normal', { bg = 'NONE' })
-vim.api.nvim_set_hl(0, 'NormalFloat', { bg = 'NONE' })
-vim.api.nvim_set_hl(0, 'SignColumn', { bg = 'NONE' })
-vim.api.nvim_set_hl(0, 'EndOfBuffer', { bg = 'NONE' })
-
 -- [[ Basic Autocommands ]]
 -- Highlight when yanking (copying) text
 vim.api.nvim_create_autocmd('TextYankPost', {
-  desc = 'Highlight when yanking (copying) text',
-  group = vim.api.nvim_create_augroup('highlight-yank', { clear = true }),
-  callback = function()
-    vim.hl.on_yank()
-  end,
+    desc = 'Highlight when yanking (copying) text',
+    group = vim.api.nvim_create_augroup('highlight-yank', { clear = true }),
+    callback = function()
+        vim.hl.on_yank()
+    end,
 })
+
+-- [[ Load Theme ]]
+-- Load the color theme configuration
+require('theme')
