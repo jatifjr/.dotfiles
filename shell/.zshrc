@@ -135,6 +135,9 @@ alias gl='git pull'
 alias gco='git checkout'
 alias gres='git restore'
 
+# Optional aliases
+alias cddot='cd ~/.dotfiles'
+
 # --------------------------------------------------------------------
 # Development Tools
 # --------------------------------------------------------------------
@@ -148,6 +151,14 @@ case ":$PATH:" in
   *":$PNPM_HOME:"*) ;;
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
+
+# --------------------------------------------------------------------
+# Optional Functions
+# --------------------------------------------------------------------
+# Simple mkdir then cd into it
+mcd() {
+  mkdir -p "$1" && cd "$1"
+}
 
 # --------------------------------------------------------------------
 # ZSH Extensions
