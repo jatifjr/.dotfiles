@@ -3,142 +3,177 @@
 # ====================================================================
 
 # --------------------------------------------------------------------
-# Powerlevel10k Instant Prompt
+# Environment
 # --------------------------------------------------------------------
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
-
-typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
-
-# --------------------------------------------------------------------
-# Environment Setup
-# --------------------------------------------------------------------
-
-# Default editor
 export EDITOR=nvim
 
-# Homebrew
-if [[ -f "/opt/homebrew/bin/brew" ]] then
+# Homebrew (macOS)
+if [[ -f "/opt/homebrew/bin/brew" ]]; then
   eval "$(/opt/homebrew/bin/brew shellenv)"
 fi
 
 # --------------------------------------------------------------------
-# Zinit Plugin Manager
-# --------------------------------------------------------------------
-# Zinit initiation
-ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
-[ ! -d $ZINIT_HOME ] && mkdir -p "$(dirname $ZINIT_HOME)"
-[ ! -d $ZINIT_HOME/.git ] && git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
-source "${ZINIT_HOME}/zinit.zsh"
-
-# Load completions
-autoload -Uz compinit && compinit
-
-# ohmyzsh & p10k initiation
-zinit light ohmyzsh/ohmyzsh
-zinit ice depth=1; zinit light romkatv/powerlevel10k
-
-# Add in snippets
-zinit snippet OMZP::git
-zinit snippet OMZP::sudo
-zinit snippet OMZP::command-not-found
-
-# pnpm
-zinit ice as"completion"
-zinit snippet ${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/completions/_pnpm
-
-# Add in zsh plugins
-zinit light zsh-users/zsh-completions
-zinit light zsh-users/zsh-autosuggestions
-zinit light zsh-users/zsh-syntax-highlighting
-zinit light Aloxaf/fzf-tab
-
-zinit cdreplay -q
-
-# --------------------------------------------------------------------
-# Shell Configuration
-# --------------------------------------------------------------------
-# Keybindings
-bindkey -e
-bindkey '^p' history-search-backward
-bindkey '^n' history-search-forward
-bindkey '^[w' kill-region
-
 # History
+# --------------------------------------------------------------------
 HISTSIZE=5000
 HISTFILE=~/.zsh_history
 SAVEHIST=$HISTSIZE
-HISTDUP=erase
 setopt appendhistory
 setopt sharehistory
 setopt hist_ignore_space
 setopt hist_ignore_all_dups
 setopt hist_save_no_dups
-setopt hist_ignore_dups
-setopt hist_find_no_dups
 
-# Completion styling
+# --------------------------------------------------------------------
+# Completions
+# --------------------------------------------------------------------
+# Set cache directory for .zcompdump
+export ZSH_COMPDUMP="${XDG_CACHE_HOME:-$HOME/.cache}/.zcompdump"
+
+# Create cache directory if it doesn't exist
+mkdir -p "$(dirname "$ZSH_COMPDUMP")"
+
+# zsh-completions
+ZSH_COMPLETIONS_DIR="$HOME/.zsh/zsh-completions"
+if [[ ! -d "$ZSH_COMPLETIONS_DIR" ]]; then
+  echo "Installing zsh-completions..."
+  mkdir -p "$HOME/.zsh"
+  git clone https://github.com/zsh-users/zsh-completions.git "$ZSH_COMPLETIONS_DIR"
+fi
+
+# Add zsh-completions to fpath before calling compinit
+if [[ -d "$ZSH_COMPLETIONS_DIR/src" ]]; then
+  fpath=("$ZSH_COMPLETIONS_DIR/src" $fpath)
+fi
+
+# Initialize completions with custom cache location
+autoload -Uz compinit && compinit -d "$ZSH_COMPDUMP"
+
+# Case insensitive completion
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
-zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
-zstyle ':completion:*' menu no
-zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
-zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
+
+# fzf-tab (Aloxaf/fzf-tab)
+ZSH_FZF_TAB_DIR="$HOME/.zsh/fzf-tab"
+if [[ ! -d "$ZSH_FZF_TAB_DIR" ]]; then
+  echo "Installing fzf-tab..."
+  git clone https://github.com/Aloxaf/fzf-tab.git "$ZSH_FZF_TAB_DIR"
+fi
+
+# Source fzf-tab after compinit
+if [[ -f "$ZSH_FZF_TAB_DIR/fzf-tab.plugin.zsh" ]]; then
+  source "$ZSH_FZF_TAB_DIR/fzf-tab.plugin.zsh"
+fi
 
 # --------------------------------------------------------------------
-# Shell Integrations
+# Key Bindings
 # --------------------------------------------------------------------
-# fzf - fuzzy finder
-eval "$(fzf --zsh)"
+bindkey -e  # Emacs mode
 
-# zoxide - smarter cd command
-eval "$(zoxide init --cmd cd zsh)"
+# --------------------------------------------------------------------
+# Prompt
+# --------------------------------------------------------------------
+# Prompt-safe PWD display with truncation
+safe_pwd() {
+  local max_length=40
+  local pwd_path="$PWD"
+  local display_path="${PWD/#$HOME/~}"
+
+  if (( ${#display_path} <= max_length )); then
+    echo "$display_path"
+    return
+  fi
+
+  # Collapse to "~/../last" or "/../last"
+  local IFS='/'
+  local -a parts=(${(s:/:)display_path})
+  local last="${parts[-1]}"
+
+  if [[ "$display_path" == ~* ]]; then
+    echo "~/../$last"
+  else
+    echo "/../$last"
+  fi
+}
+
+# Simple git branch function with dirty indicator and colors
+git_branch() {
+  local branch dirty
+
+  branch=$(git symbolic-ref --short HEAD 2>/dev/null)
+  [[ -z "$branch" ]] && branch=$(git rev-parse --short HEAD 2>/dev/null)
+
+  if [[ -n "$branch" ]]; then
+    # Check for dirty index or untracked files
+    if ! git diff-index --quiet HEAD -- 2>/dev/null || \
+       git ls-files --others --exclude-standard | grep -q .; then
+      dirty="*"
+    fi
+    echo " %F{242}${branch}${dirty}%f"
+  fi
+}
+
+
+# Set prompt
+setopt prompt_subst
+PROMPT='%F{cyan}$(safe_pwd)%f$(git_branch) %F{magenta}%#%f '
 
 # --------------------------------------------------------------------
 # Aliases
 # --------------------------------------------------------------------
 alias c='clear'
 alias ls='ls --color'
-alias la='ls --color -Alh'
+alias la='ls -la'
+alias ll='ls -l'
+
+# Git aliases
+alias gb='git branch'
+alias gs='git status'
+alias ga='git add'
+alias gc='git commit'
+alias gp='git push'
+alias gl='git pull'
+alias gco='git checkout'
+alias gres='git restore'
 
 # --------------------------------------------------------------------
 # Development Tools
 # --------------------------------------------------------------------
-
-# Docker
-# if command -v docker &> /dev/null; then
-#   docker context use default &> /dev/null
-# fi
-
-# Node Version Manager (nvm)
+# Node Version Manager
 export NVM_DIR="$HOME/.nvm"
-[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
-[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"
 
 # pnpm
-export PNPM_HOME="/Users/jatifjr/Library/pnpm"
+export PNPM_HOME="$HOME/Library/pnpm"
 case ":$PATH:" in
   *":$PNPM_HOME:"*) ;;
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 
-# Python Version Manager (pyenv)
-export PYENV_ROOT="$HOME/.pyenv"
-[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
-eval "$(pyenv init --path)"
-
-# Go
-export GOPATH=$HOME/.go
-export GOBIN=$GOPATH/bin
-export PATH=$PATH:$GOBIN
-
 # --------------------------------------------------------------------
-# Prompt Configuration
+# ZSH Extensions
 # --------------------------------------------------------------------
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+# Create extensions directory
+mkdir -p "$HOME/.zsh"
 
+# zsh-autosuggestions
+ZSH_AUTOSUGGESTIONS_DIR="$HOME/.zsh/zsh-autosuggestions"
+if [[ ! -d "$ZSH_AUTOSUGGESTIONS_DIR" ]]; then
+  echo "Installing zsh-autosuggestions..."
+  git clone https://github.com/zsh-users/zsh-autosuggestions.git "$ZSH_AUTOSUGGESTIONS_DIR"
+fi
+
+# zsh-syntax-highlighting
+ZSH_SYNTAX_HIGHLIGHTING_DIR="$HOME/.zsh/zsh-syntax-highlighting"
+if [[ ! -d "$ZSH_SYNTAX_HIGHLIGHTING_DIR" ]]; then
+  echo "Installing zsh-syntax-highlighting..."
+  git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "$ZSH_SYNTAX_HIGHLIGHTING_DIR"
+fi
+
+# Source extensions
+if [[ -f "$ZSH_AUTOSUGGESTIONS_DIR/zsh-autosuggestions.zsh" ]]; then
+  source "$ZSH_AUTOSUGGESTIONS_DIR/zsh-autosuggestions.zsh"
+fi
+
+if [[ -f "$ZSH_SYNTAX_HIGHLIGHTING_DIR/zsh-syntax-highlighting.zsh" ]]; then
+  source "$ZSH_SYNTAX_HIGHLIGHTING_DIR/zsh-syntax-highlighting.zsh"
+fi
