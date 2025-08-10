@@ -262,7 +262,7 @@ prompt_pwd() {
     local result="${path_parts[1]}"
 
     if (( ${#path_parts} > 2 )); then
-      result+="/.../${path_parts[-1]}"
+      result+="/../${path_parts[-1]}"
     else
       result="${pwd_path}"
     fi
