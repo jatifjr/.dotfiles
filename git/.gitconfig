@@ -1,51 +1,101 @@
-# This is Git's per-user configuration file.
+# ============================================================
+# Global Git Configuration
+# ============================================================
+
 [user]
-	name = Ahmad Fajar Kusumajati
-	email = fajarku26@gmail.com
-	github = jatifjr
+    name = jatifjr
+    email = 90365537+jatifjr@users.noreply.github.com
+    # Uncomment if using GPG or SSH commit signing
+    # signingkey = your-gpg-or-ssh-key-id
+
+[core]
+    editor = nvim                      # Change to your editor
+    autocrlf = input                   # Safe for macOS/Linux; set to 'true' on Windows
+    excludesfile = ~/.config/global-gitignore
+    pager = less -FRX                  # No pagination if output fits in terminal
+    fsmonitor = true                   # Speed up status checks (Git 2.36+)
 
 [color]
     ui = auto
 
-[core]
-    editor = nvim
-    autocrlf = input
+[color "status"]
+    added = green bold
+    changed = yellow bold
+    untracked = red bold
+
+[color "branch"]
+    current = yellow reverse
+    local = yellow
+    remote = green
+
+[color "diff"]
+    meta = yellow bold
+    frag = magenta bold
+    old = red bold
+    new = green bold
 
 [alias]
-    co = checkout
+    # Status & branch navigation
+    st = status -sb
     br = branch
+    co = checkout
+    sw = switch
+
+    # Commits
     ci = commit
-    st = status
-    last = log -1 HEAD
-    lg = log --oneline --graph --decorate --all
-    amend = commit --amend
+    amend = commit --amend --no-edit
     unstage = reset HEAD --
-    hist = log --pretty=format:'%h %ad | %s%d [%an]' --graph --date=short
+    fix = commit --fixup
+    squash = commit --squash
 
-[pull]
-    rebase = true
+    # Logs
+    lg = log --oneline --graph --decorate --all
+    ll = log --stat
+    lga = log --oneline --graph --decorate --all --abbrev-commit
 
-[rebase]
-    autoStash = true
+    # Diffs
+    df = diff
+    dc = diff --cached
+
+    # Undo helpers (safe)
+    undo = reset --soft HEAD~1
+    discard = checkout --              # Discard changes in working dir
+    wipe = !git reset --hard && git clean -fd
+
+    # Fetch & sync
+    fp = fetch --prune
+    up = !git pull --rebase --autostash
+
+[merge]
+    tool = nvimdiff
+    conflictstyle = diff3
+
+[diff]
+    tool = nvimdiff
 
 [push]
     default = simple
+    autoSetupRemote = true             # Automatically track upstream on first push
 
-[merge]
-    tool = vimdiff
-    conflictstyle = diff3
+[pull]
+    ff = only                          # Disallow merge commits from pull
+    rebase = true                      # Rebase instead of merge by default
+
+[init]
+    defaultBranch = main
 
 [fetch]
     prune = true
 
-[diff]
-    tool = vimdiff
-
 [rerere]
-    enabled = true
+    enabled = true                     # Remember merge conflict resolutions
 
-[credential]
-    helper = osxkeychain
+[commit]
+    verbose = true                     # Show diff when committing
 
-[init]
-    defaultBranch = main
+[status]
+    short = true
+    branch = true
+
+[url "git@github.com:jatifjr/"]
+    insteadOf = https://github.com/jatifjr/

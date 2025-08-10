@@ -47,9 +47,12 @@ if command -v brew >/dev/null 2>&1; then
   eval "$(brew shellenv)"
 fi
 
+# fnm
+eval "$(fnm env --use-on-cd --shell zsh)"
+
 # Node Version Manager
-export NVM_DIR="$HOME/.nvm"
-[[ -s "/opt/homebrew/opt/nvm/nvm.sh" ]] && . "/opt/homebrew/opt/nvm/nvm.sh"
+# export NVM_DIR="$HOME/.nvm"
+# [[ -s "/opt/homebrew/opt/nvm/nvm.sh" ]] && . "/opt/homebrew/opt/nvm/nvm.sh"
 
 # pnpm
 export PNPM_HOME="$HOME/Library/pnpm"
