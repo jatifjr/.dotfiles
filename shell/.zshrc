@@ -125,14 +125,13 @@ alias la='ls -la'
 alias ll='ls -l'
 
 # Git
-alias ga='git add'
+alias gs='git status -sb'
 alias gb='git branch'
-alias gc='git commit'
 alias gco='git checkout'
-alias gl='git pull'
+alias ga='git add'
+alias gc='git commit'
 alias gp='git push'
-alias gres='git restore'
-alias gs='git status'
+alias gl='git pull'
 
 # Navigation
 alias ..='cd ..'
