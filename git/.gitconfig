@@ -77,9 +77,5 @@
 [commit]
     verbose = true                     # Show diff when committing
 
-[status]
-    short = true
-    branch = true
-
 [url "git@github.com:jatifjr/"]
     insteadOf = https://github.com/jatifjr/
