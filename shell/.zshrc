@@ -3,66 +3,82 @@
 # ====================================================================
 
 # --------------------------------------------------------------------
+# XDG Directory Setup
+# --------------------------------------------------------------------
+export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
+export XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
+export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
+export XDG_STATE_HOME="${XDG_STATE_HOME:-$HOME/.local/state}"
+
+export ZSH_PLUGINS_DIR="$XDG_DATA_HOME/zsh"
+export ZSH_COMPDUMP="$XDG_CACHE_HOME/zsh/.zcompdump"
+export HISTFILE="$XDG_STATE_HOME/zsh/history"
+
+mkdir -p "$ZSH_PLUGINS_DIR" \
+         "$(dirname "$ZSH_COMPDUMP")" \
+         "$(dirname "$HISTFILE")"
+
+# --------------------------------------------------------------------
+# Plugin Installation
+# --------------------------------------------------------------------
+plugins=(
+  "zsh-users/zsh-completions"
+  "zsh-users/zsh-autosuggestions"
+  "zsh-users/zsh-syntax-highlighting"
+  "Aloxaf/fzf-tab"
+)
+
+for repo in "${plugins[@]}"; do
+  dir="$ZSH_PLUGINS_DIR/${repo##*/}"
+  if [[ ! -d "$dir" ]]; then
+    echo "Installing ${repo##*/}..."
+    git clone --depth=1 "https://github.com/$repo.git" "$dir" \
+      || echo "Failed to install $repo"
+  fi
+done
+
+# --------------------------------------------------------------------
 # Environment
 # --------------------------------------------------------------------
-export EDITOR=nvim
+export EDITOR="nvim"
 
 # Homebrew (macOS)
-if [[ -f "/opt/homebrew/bin/brew" ]]; then
-  eval "$(/opt/homebrew/bin/brew shellenv)"
+if command -v brew >/dev/null 2>&1; then
+  eval "$(brew shellenv)"
 fi
+
+# Node Version Manager
+export NVM_DIR="$HOME/.nvm"
+[[ -s "/opt/homebrew/opt/nvm/nvm.sh" ]] && . "/opt/homebrew/opt/nvm/nvm.sh"
+
+# pnpm
+export PNPM_HOME="$HOME/Library/pnpm"
+[[ ":$PATH:" != *":$PNPM_HOME:"* ]] && export PATH="$PNPM_HOME:$PATH"
 
 # --------------------------------------------------------------------
 # History
 # --------------------------------------------------------------------
 HISTSIZE=5000
-HISTFILE=~/.zsh_history
 SAVEHIST=$HISTSIZE
-setopt appendhistory
-setopt sharehistory
-setopt hist_ignore_space
-setopt hist_ignore_all_dups
-setopt hist_save_no_dups
+setopt appendhistory sharehistory \
+       hist_ignore_space hist_ignore_all_dups hist_save_no_dups
 
 # --------------------------------------------------------------------
 # Completions
 # --------------------------------------------------------------------
-# Set cache directory for .zcompdump
-export ZSH_COMPDUMP="${XDG_CACHE_HOME:-$HOME/.cache}/.zcompdump"
-
-# Create cache directory if it doesn't exist
-mkdir -p "$(dirname "$ZSH_COMPDUMP")"
-
-# zsh-completions
-ZSH_COMPLETIONS_DIR="$HOME/.zsh/zsh-completions"
-if [[ ! -d "$ZSH_COMPLETIONS_DIR" ]]; then
-  echo "Installing zsh-completions..."
-  mkdir -p "$HOME/.zsh"
-  git clone https://github.com/zsh-users/zsh-completions.git "$ZSH_COMPLETIONS_DIR"
+if [[ -d "$ZSH_PLUGINS_DIR/zsh-completions/src" ]]; then
+  fpath=("$ZSH_PLUGINS_DIR/zsh-completions/src" $fpath)
 fi
 
-# Add zsh-completions to fpath before calling compinit
-if [[ -d "$ZSH_COMPLETIONS_DIR/src" ]]; then
-  fpath=("$ZSH_COMPLETIONS_DIR/src" $fpath)
-fi
+autoload -Uz compinit
+compinit -C -d "$ZSH_COMPDUMP"
 
-# Initialize completions with custom cache location
-autoload -Uz compinit && compinit -d "$ZSH_COMPDUMP"
-
-# Case insensitive completion
+# Case-insensitive completion
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 
-# fzf-tab (Aloxaf/fzf-tab)
-ZSH_FZF_TAB_DIR="$HOME/.zsh/fzf-tab"
-if [[ ! -d "$ZSH_FZF_TAB_DIR" ]]; then
-  echo "Installing fzf-tab..."
-  git clone https://github.com/Aloxaf/fzf-tab.git "$ZSH_FZF_TAB_DIR"
-fi
-
-# Source fzf-tab after compinit
-if [[ -f "$ZSH_FZF_TAB_DIR/fzf-tab.plugin.zsh" ]]; then
-  source "$ZSH_FZF_TAB_DIR/fzf-tab.plugin.zsh"
-fi
+# fzf-tab after compinit
+[[ -f "$ZSH_PLUGINS_DIR/fzf-tab/fzf-tab.plugin.zsh" ]] \
+  && source "$ZSH_PLUGINS_DIR/fzf-tab/fzf-tab.plugin.zsh"
 
 # --------------------------------------------------------------------
 # Key Bindings
@@ -72,48 +88,22 @@ bindkey -e  # Emacs mode
 # --------------------------------------------------------------------
 # Prompt
 # --------------------------------------------------------------------
-# Prompt-safe PWD display with truncation
 safe_pwd() {
   local max_length=40
-  local pwd_path="$PWD"
   local display_path="${PWD/#$HOME/~}"
-
-  if (( ${#display_path} <= max_length )); then
-    echo "$display_path"
-    return
-  fi
-
-  # Collapse to "~/../last" or "/../last"
-  local IFS='/'
-  local -a parts=(${(s:/:)display_path})
-  local last="${parts[-1]}"
-
-  if [[ "$display_path" == ~* ]]; then
-    echo "~/../$last"
-  else
-    echo "/../$last"
-  fi
+  (( ${#display_path} <= max_length )) \
+    && { echo "$display_path"; return; }
+  echo "${display_path%%/*}/../${display_path##*/}"
 }
 
-# Simple git branch function with dirty indicator and colors
 git_branch() {
   local branch dirty
-
-  branch=$(git symbolic-ref --short HEAD 2>/dev/null)
-  [[ -z "$branch" ]] && branch=$(git rev-parse --short HEAD 2>/dev/null)
-
-  if [[ -n "$branch" ]]; then
-    # Check for dirty index or untracked files
-    if ! git diff-index --quiet HEAD -- 2>/dev/null || \
-       git ls-files --others --exclude-standard | grep -q .; then
-      dirty="*"
-    fi
-    echo " %F{242}${branch}${dirty}%f"
-  fi
+  branch=$(git symbolic-ref --short HEAD 2>/dev/null \
+    || git rev-parse --short HEAD 2>/dev/null) || return
+  git status --porcelain 2>/dev/null | grep -q . && dirty="*"
+  echo " %F{242}${branch}${dirty}%f"
 }
 
-
-# Set prompt
 setopt prompt_subst
 PROMPT='%F{cyan}$(safe_pwd)%f$(git_branch) %F{magenta}%#%f '
 
@@ -121,70 +111,42 @@ PROMPT='%F{cyan}$(safe_pwd)%f$(git_branch) %F{magenta}%#%f '
 # Aliases
 # --------------------------------------------------------------------
 alias c='clear'
-alias ls='ls --color'
+
+# Portable `ls` alias
+if ls --color=auto >/dev/null 2>&1; then
+  alias ls='ls --color=auto'
+else
+  alias ls='ls -G'
+fi
 alias la='ls -la'
 alias ll='ls -l'
 
-# Git aliases
-alias gb='git branch'
-alias gs='git status'
+# Git
 alias ga='git add'
+alias gb='git branch'
 alias gc='git commit'
-alias gp='git push'
-alias gl='git pull'
 alias gco='git checkout'
+alias gl='git pull'
+alias gp='git push'
 alias gres='git restore'
+alias gs='git status'
 
-# Optional aliases
-alias cddot='cd ~/.dotfiles'
-
-# --------------------------------------------------------------------
-# Development Tools
-# --------------------------------------------------------------------
-# Node Version Manager
-export NVM_DIR="$HOME/.nvm"
-[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"
-
-# pnpm
-export PNPM_HOME="$HOME/Library/pnpm"
-case ":$PATH:" in
-  *":$PNPM_HOME:"*) ;;
-  *) export PATH="$PNPM_HOME:$PATH" ;;
-esac
+# Navigation
+alias ..='cd ..'
+alias ...='cd ../..'
+alias reload='source ~/.zshrc'
+alias cdd='cd ~/.dotfiles'
 
 # --------------------------------------------------------------------
-# Optional Functions
+# Utility Functions
 # --------------------------------------------------------------------
-# Simple mkdir then cd into it
-mcd() {
-  mkdir -p "$1" && cd "$1"
-}
+mcd() { mkdir -p "$1" && cd "$1" || return; }
 
 # --------------------------------------------------------------------
-# ZSH Extensions
+# Plugins (Load Order)
 # --------------------------------------------------------------------
-# Create extensions directory
-mkdir -p "$HOME/.zsh"
+[[ -f "$ZSH_PLUGINS_DIR/zsh-autosuggestions/zsh-autosuggestions.zsh" ]] \
+  && source "$ZSH_PLUGINS_DIR/zsh-autosuggestions/zsh-autosuggestions.zsh"
 
-# zsh-autosuggestions
-ZSH_AUTOSUGGESTIONS_DIR="$HOME/.zsh/zsh-autosuggestions"
-if [[ ! -d "$ZSH_AUTOSUGGESTIONS_DIR" ]]; then
-  echo "Installing zsh-autosuggestions..."
-  git clone https://github.com/zsh-users/zsh-autosuggestions.git "$ZSH_AUTOSUGGESTIONS_DIR"
-fi
-
-# zsh-syntax-highlighting
-ZSH_SYNTAX_HIGHLIGHTING_DIR="$HOME/.zsh/zsh-syntax-highlighting"
-if [[ ! -d "$ZSH_SYNTAX_HIGHLIGHTING_DIR" ]]; then
-  echo "Installing zsh-syntax-highlighting..."
-  git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "$ZSH_SYNTAX_HIGHLIGHTING_DIR"
-fi
-
-# Source extensions
-if [[ -f "$ZSH_AUTOSUGGESTIONS_DIR/zsh-autosuggestions.zsh" ]]; then
-  source "$ZSH_AUTOSUGGESTIONS_DIR/zsh-autosuggestions.zsh"
-fi
-
-if [[ -f "$ZSH_SYNTAX_HIGHLIGHTING_DIR/zsh-syntax-highlighting.zsh" ]]; then
-  source "$ZSH_SYNTAX_HIGHLIGHTING_DIR/zsh-syntax-highlighting.zsh"
-fi
+[[ -f "$ZSH_PLUGINS_DIR/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]] \
+  && source "$ZSH_PLUGINS_DIR/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
