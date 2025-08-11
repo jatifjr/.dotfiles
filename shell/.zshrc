@@ -258,60 +258,29 @@ zstyle ':vcs_info:git:*' actionformats ' %F{242}%b|%a%c%u%f'
 
 # Intelligent path shortening
 prompt_pwd() {
-  local depth=2  # Change to 2 if you want last 2 dirs
-  local pwd_path="$PWD"
-
-  if [[ $pwd_path == $HOME* ]]; then
-    # Inside home — replace $HOME with ~
-    local rel_path="${pwd_path/#$HOME/~}"
-    # Split into array (preserve ~ as first element)
-    local -a path_parts
-    IFS='/' read -A path_parts <<< "$rel_path"
-
-    if (( ${#path_parts[@]} > depth )); then
-      printf '~/%s' "${(j:/:)path_parts[-$depth,-1]}"
-    else
-      printf '%s' "$rel_path"
-    fi
+  local depth=2 path="${PWD/#$HOME/~}" parts
+  IFS='/' parts=(${=path})  # Split into array
+  if (( ${#parts[@]} > depth )); then
+    printf '%s/%s' "${parts[1]}" "${(j:/:)parts[-$depth,-1]}"
   else
-    # Outside home
-    local -a path_parts
-    IFS='/' read -A path_parts <<< "$pwd_path"
-
-    if (( ${#path_parts[@]} > depth )); then
-      printf '/%s' "${(j:/:)path_parts[-$depth,-1]}"
-    else
-      printf '%s' "$pwd_path"
-    fi
+    printf '%s' "$path"
   fi
 }
 
-# Base directories where VCS info should always run
+# Allowed base directories for VCS info
 VCS_ALLOWED_BASES=(
   "$HOME/.dotfiles"
-  "${PROJECTS_DIR}"
-  "${WORK_DIR}"
+  "$PROJECTS_DIR"
+  "$WORK_DIR"
 )
 
-# Pre-command hook for VCS info
+# Only run vcs_info in allowed directories
 precmd() {
-  setopt localoptions nocaseglob  # Case-insensitive matching for this function
-  local allowed=false
-
+  setopt localoptions nocaseglob
   for base in "${VCS_ALLOWED_BASES[@]}"; do
-    if [[ $PWD == ${~base}(|/*) ]]; then
-      # ${~base} turns the variable into a glob
-      # (|/*) means "exact dir OR any subpath"
-      allowed=true
-      break
-    fi
+    [[ $PWD == ${~base}(|/*) ]] && { vcs_info; return }
   done
-
-  if $allowed; then
-    vcs_info
-  else
-    unset vcs_info_msg_0_
-  fi
+  unset vcs_info_msg_0_
 }
 
 # Prompt definition
@@ -380,154 +349,75 @@ command -v fd >/dev/null 2>&1 && alias find='fd'
 # UTILITY FUNCTIONS
 # ====================================================================
 
-# Create and change to directory
-mcd() {
-  [[ $# -ne 1 ]] && { echo "Usage: mcd <directory>" >&2; return 1; }
-  mkdir -p "$1" && cd "$1"
-}
+# Create and change directory
+mcd() { [[ $# -eq 1 ]] || { echo "Usage: mcd <dir>" >&2; return 1; }; mkdir -p "$1" && cd "$1"; }
 
-# Enhanced archive extraction
+# Extract various archive formats
 extract() {
-  [[ $# -ne 1 ]] && { echo "Usage: extract <archive>" >&2; return 1; }
-  [[ ! -f "$1" ]] && { echo "Error: File not found: $1" >&2; return 1; }
-
+  [[ $# -eq 1 && -f $1 ]] || { echo "Usage: extract <archive>" >&2; return 1; }
   case "${1:l}" in
     *.tar.bz2|*.tbz2) tar xjf "$1" ;;
     *.tar.gz|*.tgz)   tar xzf "$1" ;;
     *.tar.xz|*.txz)   tar xJf "$1" ;;
-    *.tar)            tar xf "$1" ;;
+    *.tar)            tar xf  "$1" ;;
     *.bz2)            bunzip2 "$1" ;;
-    *.gz)             gunzip "$1" ;;
+    *.gz)             gunzip  "$1" ;;
     *.rar)            unrar x "$1" ;;
-    *.zip)            unzip "$1" ;;
+    *.zip)            unzip   "$1" ;;
     *.Z)              uncompress "$1" ;;
     *.7z)             7z x "$1" ;;
-    *)                echo "Error: Cannot extract '$1' - unsupported format" >&2; return 1 ;;
+    *) echo "Error: Unsupported format '$1'" >&2; return 1 ;;
   esac
 }
 
-# Smart process killer
+# Kill processes by name
 fkill() {
-  [[ $# -eq 0 ]] && { echo "Usage: fkill <process_name>" >&2; return 1; }
-  local pids
-  pids=$(pgrep -f "$1")
-  if [[ -n "${pids}" ]]; then
-    echo "Killing processes: ${pids}"
-    kill ${pids}
-  else
-    echo "No processes found matching: $1" >&2
-    return 1
-  fi
+  [[ $# -gt 0 ]] || { echo "Usage: fkill <process>" >&2; return 1; }
+  local pids=$(pgrep -f "$1")
+  [[ -n $pids ]] && { echo "Killing: $pids"; kill $pids; } || { echo "No process: $1" >&2; return 1; }
 }
 
-# Quick file finder
-ff() {
-  [[ $# -eq 0 ]] && { echo "Usage: ff <filename>" >&2; return 1; }
-  if command -v fd >/dev/null 2>&1; then
-    fd -H -I "$1"
-  else
-    find . -name "*$1*" 2>/dev/null
-  fi
-}
+# Find file by name (fd if available)
+ff() { [[ $# -gt 0 ]] || { echo "Usage: ff <filename>" >&2; return 1; }; command -v fd &>/dev/null && fd -H -I "$1" || find . -name "*$1*" 2>/dev/null; }
 
 # Git worktree helper
 gwt() {
   case "$1" in
-    add)
-      [[ $# -ne 3 ]] && { echo "Usage: gwt add <branch> <path>" >&2; return 1; }
-      git worktree add "$3" "$2"
-      ;;
-    remove|rm)
-      [[ $# -ne 2 ]] && { echo "Usage: gwt remove <path>" >&2; return 1; }
-      git worktree remove "$2"
-      ;;
-    list|ls)
-      git worktree list
-      ;;
-    *)
-      echo "Usage: gwt {add|remove|list} [args...]" >&2
-      return 1
-      ;;
+    add)    [[ $# -eq 3 ]] || { echo "Usage: gwt add <branch> <path>" >&2; return 1; }; git worktree add "$3" "$2" ;;
+    rm|remove) [[ $# -eq 2 ]] || { echo "Usage: gwt remove <path>" >&2; return 1; }; git worktree remove "$2" ;;
+    ls|list) git worktree list ;;
+    *) echo "Usage: gwt {add|remove|list} [args...]" >&2; return 1 ;;
   esac
 }
 
-# Smart cat: short output to stdout, long output via less (with colors)
+# Smart cat: short to stdout, long via less
 smartcat() {
-  local total_lines=0
-  local file
-
-  # No args → behave like normal cat
-  if [[ $# -eq 0 ]]; then
-    command cat
-    return
-  fi
-
-  # Count total lines across all regular files
-  for file in "$@"; do
-    if [[ -f "$file" ]]; then
-      total_lines=$(( total_lines + $(wc -l < "$file") ))
-    fi
-  done
-
-  # If output is terminal and file is longer than screen → page with less
-  if [[ -t 1 ]] && (( total_lines > LINES )); then
-    command cat -- "$@" | less -RFXi
-  else
-    command cat -- "$@"
-  fi
+  [[ $# -gt 0 ]] || { command cat; return; }
+  local total=0
+  for f; do [[ -f $f ]] && (( total += $(wc -l < "$f") )); done
+  [[ -t 1 && $total -gt $LINES ]] && command cat -- "$@" | less -RFXi || command cat -- "$@"
 }
 
-# CDP: shortcut to ~/Projects or a specific project inside it
-# Usage: cdp [project_directory]
-# Example: 'cdp my-project' or 'cdp "My Project"'
-cdp() {
-  local base_dir="${PROJECTS_DIR}"
-
-  if [[ -z "$1" ]]; then
-    cd "$base_dir" || return
-  else
-    cd "$base_dir/$*" || {
-      echo "Project '$*' not found in $base_dir"
-      return 1
-    }
-  fi
+# Change to Projects or Work dir (with project)
+_cdx() {
+  local base="$1"
+  shift
+  [[ -z $1 ]] && cd "$base" || cd "$base/$*" || { echo "Project '$*' not found in $base" >&2; return 1; }
 }
+cdp() { _cdx "$PROJECTS_DIR" "$@"; }
+cdw() { _cdx "$WORK_DIR" "$@"; }
 
-# CDW: shortcut to ~/Projects/work or a specific project inside it
-# Usage: cdw [project_directory]
-# Example: 'cdw my-project' or 'cdw "My Project"'
-cdw() {
-  local base_dir="${WORK_DIR}"
-
-  if [[ -z "$1" ]]; then
-    cd "$base_dir" || return
-  else
-    cd "$base_dir/$*" || {
-      echo "Project '$*' not found in $base_dir"
-      return 1
-    }
-  fi
-}
-
-# Generic completion for both cdp and cdw
+# Completion for cdp/cdw
 _cdx_completion() {
-  # Decide base dir based on command name
   local base_dir
   case $service in
     cdp) base_dir="$PROJECTS_DIR" ;;
     cdw) base_dir="$WORK_DIR" ;;
     *) return 1 ;;
   esac
-
   _arguments '1: :->project'
-  case $state in
-    project)
-      _files -W "$base_dir" -/
-      ;;
-  esac
+  [[ $state == project ]] && _files -W "$base_dir" -/
 }
-
-# Assign the same completion to both commands
 compdef _cdx_completion cdp cdw
 
 # ====================================================================
