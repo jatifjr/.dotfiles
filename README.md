@@ -8,18 +8,17 @@ This repository contains my personal dotfiles, organized for easy management wit
 ~/.dotfiles/
 ├── config/          # Application configurations
 │   └── .config/
-│       ├── aerospace/
-│       ├── alacritty/
 │       ├── ghostty/
-│       ├── karabiner/
 │       ├── nvim/
-│       └── zed/
+│       └── ...
+├── git/             # Git configurations
+│   ├── .gitconfig
+│   ├── .gitignore_global
+│   └── ...
 ├── shell/           # Shell configurations
 │   ├── .zshrc
-│   └── .p10k.zsh
-└── git/             # Git configurations
-    ├── .gitconfig
-    └── .gitignore
+│   └── ...
+└── ...
 ```
 
 ## Usage
@@ -27,10 +26,13 @@ This repository contains my personal dotfiles, organized for easy management wit
 ### Prerequisites
 
 Install GNU Stow:
+
 ```bash
 # macOS
 brew install stow
+```
 
+```bash
 # Ubuntu/Debian
 sudo apt install stow
 ```
@@ -44,12 +46,16 @@ cd ~/.dotfiles
 
 # Stow all configurations
 stow config shell git
+```
 
+```bash
 # Or stow individual packages
 stow config     # Links ~/.config/* to dotfiles
 stow shell      # Links shell configs to home directory
 stow git        # Links git configs to home directory
+```
 
+```bash
 # Stow everything at once
 stow */
 ```
@@ -61,7 +67,9 @@ To remove symlinks (unstow):
 ```bash
 # Unstow specific packages
 stow -D config shell git
+```
 
+```bash
 # Unstow everything
 stow -D */
 ```
@@ -73,7 +81,9 @@ To update existing symlinks after making changes:
 ```bash
 # Restow specific packages
 stow -R config
+```
 
+```bash
 # Restow everything
 stow -R */
 ```
@@ -82,26 +92,26 @@ stow -R */
 
 After stowing, you'll have these symlinks:
 
-- `~/.config/aerospace/` → `~/.dotfiles/config/.config/aerospace/`
-- `~/.config/alacritty/` → `~/.dotfiles/config/.config/alacritty/`
 - `~/.config/ghostty/` → `~/.dotfiles/config/.config/ghostty/`
-- `~/.config/karabiner/` → `~/.dotfiles/config/.config/karabiner/`
 - `~/.config/nvim/` → `~/.dotfiles/config/.config/nvim/`
-- `~/.config/zed/` → `~/.dotfiles/config/.config/zed/`
-- `~/.zshrc` → `~/.dotfiles/shell/.zshrc`
-- `~/.p10k.zsh` → `~/.dotfiles/shell/.p10k.zsh`
 - `~/.gitconfig` → `~/.dotfiles/git/.gitconfig`
-- `~/.gitignore` → `~/.dotfiles/git/.gitignore`
+- `~/.gitignore_global` → `~/.dotfiles/git/.gitignore_global`
+- `~/.zshrc` → `~/.dotfiles/shell/.zshrc`
+- ...
 
 ## Useful Commands
 
 ```bash
 # Dry run (simulate without making changes)
 stow -n config
+```
 
+```bash
 # Verbose output (see what's being linked)
 stow -v config
+```
 
+```bash
 # Check what's currently stowed
 find ~ -type l -ls | grep dotfiles
 ```
@@ -132,11 +142,7 @@ find ~ -type l ! -exec test -e {} \; -print | grep dotfiles
 
 ## Applications Configured
 
-- **AeroSpace**: Tiling window manager
-- **Alacritty**: Terminal emulator
 - **Ghostty**: Terminal emulator
-- **Karabiner**: Key remapping
 - **Neovim**: Text editor
-- **Zed**: Code editor
-- **Zsh**: Shell with Powerlevel10k theme
 - **Git**: Version control
+- **Zsh**: Shell

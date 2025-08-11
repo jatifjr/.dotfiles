@@ -11,7 +11,7 @@
 [core]
     editor = nvim                      # Change to your editor
     autocrlf = input                   # Safe for macOS/Linux; set to 'true' on Windows
-    excludesfile = ~/.config/global-gitignore
+    excludesfile = ~/.gitignore_global # Use global gitignore
     pager = less -RFX                  # No pagination if output fits in terminal
     fsmonitor = true                   # Speed up status checks (Git 2.36+)
 
