@@ -31,6 +31,10 @@ export ZSH_PLUGINS_DIR="${XDG_DATA_HOME}/zsh/plugins"
 export ZSH_COMPDUMP="${XDG_CACHE_HOME}/zsh/.zcompdump"
 export HISTFILE="${XDG_STATE_HOME}/zsh/history"
 
+# Project directories
+export PROJECTS_DIR="${HOME}/Projects"
+export WORK_DIR="${HOME}/Projects/work"
+
 # Create required directories atomically
 _create_zsh_dirs() {
   local dirs=(
@@ -38,6 +42,8 @@ _create_zsh_dirs() {
     "${ZSH_COMPDUMP:h}"
     "${HISTFILE:h}"
     "${XDG_CACHE_HOME}/zsh"
+    "${PROJECTS_DIR}"
+    "${WORK_DIR}"
   )
 
   for dir in "${dirs[@]}"; do
@@ -73,7 +79,7 @@ HISTSIZE=50000
 SAVEHIST=50000
 
 # Less configuration
-export LESS='-R --use-color -Dd+r$Du+b$'
+export LESS='-RFXi'
 export LESSHISTFILE="${XDG_CACHE_HOME}/less/history"
 
 # ====================================================================
@@ -217,7 +223,7 @@ zstyle ':completion:*' file-sort modification
 zstyle ':completion:*' list-colors ''
 zstyle ':completion:*' matcher-list 'm:{[:lower:][:upper:]}={[:upper:][:lower:]}' 'r:|=*' 'l:|=* r:|=*'
 zstyle ':completion:*' menu select
-zstyle ':completion:*' special-dirs true
+zstyle ':completion:*' special-dirs false
 zstyle ':completion:*' squeeze-slashes true
 
 # Group matches and describe
@@ -248,31 +254,64 @@ zstyle ':vcs_info:*' unstagedstr '*'
 zstyle ':vcs_info:*' stagedstr '+'
 zstyle ':vcs_info:git:*' formats ' %F{242}%b%c%u%f'
 zstyle ':vcs_info:git:*' actionformats ' %F{242}%b|%a%c%u%f'
+# zstyle ':vcs_info:*+*:*' debug true     # Enable debug logging
 
 # Intelligent path shortening
 prompt_pwd() {
-  local max_length=35
-  local pwd_path="${PWD/#$HOME/~}"
+  local depth=2  # Change to 2 if you want last 2 dirs
+  local pwd_path="$PWD"
 
-  if (( ${#pwd_path} <= max_length )); then
-    printf '%s' "${pwd_path}"
-  else
-    local IFS='/'
-    local -a path_parts=("${(s:/:)pwd_path}")
-    local result="${path_parts[1]}"
+  if [[ $pwd_path == $HOME* ]]; then
+    # Inside home — replace $HOME with ~
+    local rel_path="${pwd_path/#$HOME/~}"
+    # Split into array (preserve ~ as first element)
+    local -a path_parts
+    IFS='/' read -A path_parts <<< "$rel_path"
 
-    if (( ${#path_parts} > 2 )); then
-      result+="/../${path_parts[-1]}"
+    if (( ${#path_parts[@]} > depth )); then
+      printf '~/%s' "${(j:/:)path_parts[-$depth,-1]}"
     else
-      result="${pwd_path}"
+      printf '%s' "$rel_path"
     fi
-    printf '%s' "${result}"
+  else
+    # Outside home
+    local -a path_parts
+    IFS='/' read -A path_parts <<< "$pwd_path"
+
+    if (( ${#path_parts[@]} > depth )); then
+      printf '/%s' "${(j:/:)path_parts[-$depth,-1]}"
+    else
+      printf '%s' "$pwd_path"
+    fi
   fi
 }
 
+# Base directories where VCS info should always run
+VCS_ALLOWED_BASES=(
+  "$HOME/.dotfiles"
+  "${PROJECTS_DIR}"
+  "${WORK_DIR}"
+)
+
 # Pre-command hook for VCS info
 precmd() {
-  vcs_info
+  setopt localoptions nocaseglob  # Case-insensitive matching for this function
+  local allowed=false
+
+  for base in "${VCS_ALLOWED_BASES[@]}"; do
+    if [[ $PWD == ${~base}(|/*) ]]; then
+      # ${~base} turns the variable into a glob
+      # (|/*) means "exact dir OR any subpath"
+      allowed=true
+      break
+    fi
+  done
+
+  if $allowed; then
+    vcs_info
+  else
+    unset vcs_info_msg_0_
+  fi
 }
 
 # Prompt definition
@@ -290,26 +329,12 @@ alias reload='exec ${SHELL} -l'
 alias path='printf "%s\n" ${path}'
 
 # File Operations with Smart Defaults
-if command -v eza >/dev/null 2>&1; then
-  alias ls='eza --group-directories-first'
-  alias ll='eza -l --group-directories-first'
-  alias la='eza -la --group-directories-first'
-  alias lt='eza -l --sort=modified --group-directories-first'
-  alias tree='eza --tree'
-else
-  # Fallback to traditional ls with color support
-  if ls --color=auto >/dev/null 2>&1; then
-    alias ls='ls --color=auto --group-directories-first'
-  elif [[ "${OSTYPE}" == darwin* ]]; then
-    alias ls='ls -G'
-  fi
-  alias ll='ls -l'
-  alias la='ls -la'
-  alias lt='ls -lt'
-fi
-
-alias l='ls'
+alias ls='ls --color=auto'
+alias ll='ls -l'
+alias la='ls -la'
+alias lt='ls -lt'
 alias lh='ls -lh'
+alias l='ls'
 
 # Navigation
 alias ..='cd ..'
@@ -343,15 +368,13 @@ alias glog='git log --oneline --graph --decorate'
 alias gstash='git stash'
 alias gpop='git stash pop'
 
-# Modern CLI tool aliases
-command -v bat >/dev/null 2>&1 && alias cat='bat --paging=never'
+# CLI tool aliases
+alias cat='smartcat' # Look at UTILITY FUNCTIONS for more
 command -v rg >/dev/null 2>&1 && alias grep='rg'
 command -v fd >/dev/null 2>&1 && alias find='fd'
 
 # Directory shortcuts (conditional)
 [[ -d ~/.dotfiles ]] && alias cdd='cd ~/.dotfiles'
-[[ -d ~/Projects ]] && alias cdp='cd ~/Projects'
-[[ -d ~/Projects/work ]] && alias cdw='cd ~/Projects/work'
 
 # ====================================================================
 # UTILITY FUNCTIONS
@@ -428,6 +451,85 @@ gwt() {
   esac
 }
 
+# Smart cat: short output to stdout, long output via less (with colors)
+smartcat() {
+  local total_lines=0
+  local file
+
+  # No args → behave like normal cat
+  if [[ $# -eq 0 ]]; then
+    command cat
+    return
+  fi
+
+  # Count total lines across all regular files
+  for file in "$@"; do
+    if [[ -f "$file" ]]; then
+      total_lines=$(( total_lines + $(wc -l < "$file") ))
+    fi
+  done
+
+  # If output is terminal and file is longer than screen → page with less
+  if [[ -t 1 ]] && (( total_lines > LINES )); then
+    command cat -- "$@" | less -RFXi
+  else
+    command cat -- "$@"
+  fi
+}
+
+# CDP: shortcut to ~/Projects or a specific project inside it
+# Usage: cdp [project_directory]
+# Example: 'cdp my-project' or 'cdp "My Project"'
+cdp() {
+  local base_dir="${PROJECTS_DIR}"
+
+  if [[ -z "$1" ]]; then
+    cd "$base_dir" || return
+  else
+    cd "$base_dir/$*" || {
+      echo "Project '$*' not found in $base_dir"
+      return 1
+    }
+  fi
+}
+
+# CDW: shortcut to ~/Projects/work or a specific project inside it
+# Usage: cdw [project_directory]
+# Example: 'cdw my-project' or 'cdw "My Project"'
+cdw() {
+  local base_dir="${WORK_DIR}"
+
+  if [[ -z "$1" ]]; then
+    cd "$base_dir" || return
+  else
+    cd "$base_dir/$*" || {
+      echo "Project '$*' not found in $base_dir"
+      return 1
+    }
+  fi
+}
+
+# Generic completion for both cdp and cdw
+_cdx_completion() {
+  # Decide base dir based on command name
+  local base_dir
+  case $service in
+    cdp) base_dir="$PROJECTS_DIR" ;;
+    cdw) base_dir="$WORK_DIR" ;;
+    *) return 1 ;;
+  esac
+
+  _arguments '1: :->project'
+  case $state in
+    project)
+      _files -W "$base_dir" -/
+      ;;
+  esac
+}
+
+# Assign the same completion to both commands
+compdef _cdx_completion cdp cdw
+
 # ====================================================================
 # PLUGIN MANAGEMENT SYSTEM
 # ====================================================================
@@ -487,26 +589,8 @@ _load_plugins() {
 _load_plugins
 
 # Plugin configurations
-[[ -n "${ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE}" ]] || ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=240'
+[[ -n "${ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE}" ]] || ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=242'
 [[ -n "${ZSH_AUTOSUGGEST_STRATEGY}" ]] || ZSH_AUTOSUGGEST_STRATEGY=(history completion)
-
-# ====================================================================
-# FZF INTEGRATION (if available)
-# ====================================================================
-
-if command -v fzf >/dev/null 2>&1; then
-  # Source FZF key bindings and completion
-  [[ -f ~/.fzf.zsh ]] && source ~/.fzf.zsh
-
-  # FZF configuration
-  export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border'
-
-  # Use fd for FZF if available
-  if command -v fd >/dev/null 2>&1; then
-    export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
-    export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-  fi
-fi
 
 # ====================================================================
 # PERFORMANCE OPTIMIZATION
