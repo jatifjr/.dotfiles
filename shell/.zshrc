@@ -108,7 +108,7 @@ zstyle ':vcs_info:*' formats ' %F{242}%b%c%u%f'
 zstyle ':vcs_info:*' actionformats ' %F{242}%b|%a%c%u%f'
 
 precmd() { vcs_info }
-PROMPT='%F{cyan}%1~%f${vcs_info_msg_0_} %F{magenta}%#%f '
+PROMPT='%F{cyan}%2~%f${vcs_info_msg_0_} %F{magenta}%#%f '
 
 # --- Aliases ---
 alias c='clear'
