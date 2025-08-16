@@ -1,0 +1,25 @@
+;; Kanata configuration for Mac
+(defcfg
+  process-unmapped-keys yes
+  log-layer-changes no
+)
+
+(defvar
+  tap-time 100
+  hold-time 200
+)
+
+;; Define aliases for cleaner code
+(defalias
+  escctrl (tap-hold $tap-time $hold-time esc lctl) ;; Esc + Left Control
+)
+
+;; Define input devices (adjust device path as needed for your MacBook Pro)
+(defsrc
+  caps
+)
+
+;; Define the output layer
+(deflayer base
+  @escctrl
+)
