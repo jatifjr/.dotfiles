@@ -1,28 +1,29 @@
-;; Kanata configuration for Mac
+;; Kanata config for macOS
+
 (defcfg
-  process-unmapped-keys yes
-  log-layer-changes no
+  process-unmapped-keys yes   ;; Handle unmapped keys
+  log-layer-changes no        ;; Don't log layer switches
 )
 
-(defvar
-  tap-time 100
-  hold-time 100
-)
-
-;; Define aliases for cleaner code
-(defalias
-  hyper (tap-hold-press $tap-time $hold-time esc (multi lsft lctl lalt lmet))
-  escctrl (tap-hold $tap-time $hold-time esc lctl) ;; Esc + Left Control
-)
-
-;; Define input devices (adjust device path as needed for your machine)
 (defsrc
+  ;; Define source keys (raw keys from the keyboard)
+  ;; These are the physical input keys Kanata listens to
   esc
   caps
 )
 
-;; Define the output layer
+(defvar
+  tap-time 200   ;; Tap = under 200ms
+  hold-time 200  ;; Hold = over 200ms
+)
+
+(defalias
+  hyp   (multi lsft lctl lalt lmet)                  ;; Hyper (⌘ + ⌥ + ⌃ + ⇧)
+  esctl (tap-hold-press $tap-time $hold-time esc lctl) ;; Esc when tapped, Ctrl when held
+)
+
 (deflayer base
-  @hyper
-  @escctrl
+  ;; Base layer mapping (default behavior when active)
+  @hyp
+  @esctl
 )
