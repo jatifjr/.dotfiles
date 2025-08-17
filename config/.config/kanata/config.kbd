@@ -1,8 +1,8 @@
 ;; Kanata config for macOS
 
 (defcfg
-  process-unmapped-keys yes   ;; Handle unmapped keys
-  log-layer-changes no        ;; Don't log layer switches
+  process-unmapped-keys yes  ;; Handle unmapped keys
+  log-layer-changes no  ;; Don't log layer switches
 )
 
 (defsrc
@@ -13,13 +13,13 @@
 )
 
 (defvar
-  tap-time 200   ;; Tap = under 200ms
+  tap-time 200  ;; Tap = under 200ms
   hold-time 200  ;; Hold = over 200ms
 )
 
 (defalias
-  hyp   (multi lsft lctl lalt lmet)                  ;; Hyper (⌘ + ⌥ + ⌃ + ⇧)
-  esctl (tap-hold-press $tap-time $hold-time esc lctl) ;; Esc when tapped, Ctrl when held
+  hyp   (multi lsft lctl lalt lmet)  ;; Hyper (⌘ + ⌥ + ⌃ + ⇧)
+  esctl (tap-hold-press $tap-time $hold-time esc lctl)  ;; Esc when tapped, Ctrl when held
 )
 
 (deflayer base
