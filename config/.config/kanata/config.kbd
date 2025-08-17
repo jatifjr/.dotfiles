@@ -6,20 +6,23 @@
 
 (defvar
   tap-time 100
-  hold-time 200
+  hold-time 100
 )
 
 ;; Define aliases for cleaner code
 (defalias
+  hyper (tap-hold-press $tap-time $hold-time esc (multi lsft lctl lalt lmet))
   escctrl (tap-hold $tap-time $hold-time esc lctl) ;; Esc + Left Control
 )
 
-;; Define input devices (adjust device path as needed for your MacBook Pro)
+;; Define input devices (adjust device path as needed for your machine)
 (defsrc
+  esc
   caps
 )
 
 ;; Define the output layer
 (deflayer base
+  @hyper
   @escctrl
 )
