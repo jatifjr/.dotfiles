@@ -4,7 +4,7 @@
 [[ -o interactive ]] || return
 
 # Uncomment to enable profiling
-# zmodload zsh/zprof
+zmodload zsh/zprof
 
 # --- XDG paths ---
 export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-${HOME}/.config}"
@@ -63,12 +63,19 @@ _setup_homebrew() {
     eval "$(/usr/local/bin/brew shellenv)"
   fi
 }
+
 _setup_fnm() {
   command -v fnm >/dev/null 2>&1 && eval "$(fnm env --use-on-cd --shell zsh)"
 }
+
+_setup_zoxide() {
+  command -v zoxide >/dev/null 2>&1 && eval "$(zoxide init --cmd cd zsh)"
+}
+
 if [[ -z "$_TOOLS_INITIALIZED" ]]; then
   _setup_homebrew
   _setup_fnm
+  _setup_zoxide
   export _TOOLS_INITIALIZED=1
 fi
 
@@ -149,8 +156,6 @@ alias cat='smartcat'
 command -v rg >/dev/null 2>&1 && alias grep='rg'
 command -v fd >/dev/null 2>&1 && alias find='fd'
 [[ -d ~/.dotfiles ]] && alias cdd='cd ~/.dotfiles'
-[[ -d $PROJECTS_DIR ]] && alias cdp='cdproj'
-[[ -d $WORK_DIR ]] && alias cdw='cdwork'
 
 # --- Utilities ---
 mcd() { [[ $# -eq 1 ]] || { echo "Usage: mcd <dir>" >&2; return 1; }; mkdir -p "$1" && cd "$1"; }
@@ -188,22 +193,6 @@ smartcat() {
   [[ -t 1 && $total -gt $LINES ]] && command cat -- "$@" | less -RFXi || command cat -- "$@"
 }
 
-# Project jump
-_cdx() { local base="$1"; shift; [[ -z $1 ]] && cd "$base" || cd "$base/$*" || { echo "Not found in $base: $*" >&2; return 1; }; }
-cdproj() { _cdx "$PROJECTS_DIR" "$@"; }
-cdwork() { _cdx "$WORK_DIR" "$@"; }
-_cdx_completion() {
-  local base_dir
-  case $service in
-    cdproj) base_dir="$PROJECTS_DIR" ;;
-    cdwork) base_dir="$WORK_DIR" ;;
-    *) return 1 ;;
-  esac
-  _arguments '1: :->project'
-  [[ $state == project ]] && _files -W "$base_dir" -/
-}
-compdef _cdx_completion cdproj cdwork
-
 # --- Plugins (Antidote: fast static bundle) ---
 ANTIDOTE_DIR="${XDG_DATA_HOME}/zsh/antidote"
 if [[ ! -r "${ANTIDOTE_DIR}/antidote.zsh" ]]; then
@@ -235,7 +224,7 @@ alias plugins-edit="$EDITOR ${ZSH_PLUGIN_LIST_FILE}"
 alias plugins-rebuild='antidote bundle < "${ZSH_PLUGIN_LIST_FILE}" >| "${ZSH_PLUGIN_BUNDLE}" && echo "Rebuilt: ${ZSH_PLUGIN_BUNDLE}"'
 
 # --- Cleanup ---
-unfunction _setup_homebrew _setup_fnm 2>/dev/null
+unfunction _setup_homebrew _setup_fnm _setup_zoxide 2>/dev/null
 
 # --- Profiling ---
-# zprof
+zprof
