@@ -124,10 +124,28 @@ alias j='jobs'
 alias reload='exec ${SHELL} -l'
 alias path='printf "%s\n" ${path}'
 
-alias ls='ls --color=auto'
+# ls (GNU vs BSD/macOS)
+if ls --color=auto >/dev/null 2>&1; then
+  alias ls='ls --color=auto'
+else
+  alias ls='ls -G'
+fi
 alias ll='ls -l'
 alias la='ls -la'
 alias lh='ls -lh'
+
+# grep (prefer ripgrep if available)
+if command -v rg >/dev/null; then
+  alias grep='rg'
+fi
+
+# find (prefer fd if available)
+if command -v fd >/dev/null; then
+  alias find='fd'
+fi
+
+# cat (always smartcat, defined later in config)
+alias cat='smartcat'
 
 alias ..='cd ..'
 alias ...='cd ../..'
@@ -151,10 +169,7 @@ alias gp='git push'
 alias gs='git status --short --branch'
 alias glog='git log --oneline --graph --decorate'
 
-# Prefer fast tools if present
-alias cat='smartcat'
-command -v rg >/dev/null 2>&1 && alias grep='rg'
-command -v fd >/dev/null 2>&1 && alias find='fd'
+# cd to ~/.dotfiles if present
 [[ -d ~/.dotfiles ]] && alias cdd='cd ~/.dotfiles'
 
 # --- Utilities ---
@@ -162,29 +177,53 @@ mcd() { [[ $# -eq 1 ]] || { echo "Usage: mcd <dir>" >&2; return 1; }; mkdir -p "
 
 extract() {
   [[ $# -eq 1 && -f $1 ]] || { echo "Usage: extract <archive>" >&2; return 1; }
-  case "${1:l}" in
-    *.tar.bz2|*.tbz2) tar xjf "$1" ;;
-    *.tar.gz|*.tgz)   tar xzf "$1" ;;
-    *.tar.xz|*.txz)   tar xJf "$1" ;;
-    *.tar.zst)        tar --zstd -xf "$1" ;;
-    *.tar)            tar xf  "$1" ;;
-    *.bz2)            bunzip2 "$1" ;;
-    *.gz)             gunzip  "$1" ;;
-    *.rar)            unrar x "$1" ;;
-    *.zip)            unzip   "$1" ;;
-    *.Z)              uncompress "$1" ;;
-    *.7z)             7z x "$1" ;;
-    *) echo "Unsupported: $1" >&2; return 1 ;;
+  local file=$1
+  case "${file:l}" in
+    *.tar.bz2|*.tbz2)  tar xjf "$file" ;;
+    *.tar.gz|*.tgz)    tar xzf "$file" ;;
+    *.tar.xz|*.txz)    tar xJf "$file" ;;
+    *.tar.zst)         command -v zstd >/dev/null && tar --zstd -xf "$file" || echo "zstd not installed" ;;
+    *.tar)             tar xf "$file" ;;
+    *.bz2)             bunzip2 "$file" ;;
+    *.gz)              gunzip "$file" ;;
+    *.rar)             command -v unrar >/dev/null && unrar x "$file" || echo "unrar not installed" ;;
+    *.zip)             command -v unzip >/dev/null && unzip "$file" || echo "unzip not installed" ;;
+    *.Z)               uncompress "$file" ;;
+    *.7z)              command -v 7z >/dev/null && 7z x "$file" || echo "7z not installed" ;;
+    *) echo "Unsupported archive type: $file" >&2; return 1 ;;
   esac
 }
 
 fkill() {
   [[ $# -gt 0 ]] || { echo "Usage: fkill <process>" >&2; return 1; }
-  local pids; pids=$(pgrep -f "$1")
-  [[ -n $pids ]] && { echo "Killing: $pids"; kill $pids; } || { echo "No process: $1" >&2; return 1; }
+  if ! command -v pgrep >/dev/null; then
+    echo "Error: pgrep is not available on this system" >&2
+    return 1
+  fi
+
+  local pids
+  pids=$(pgrep -f "$1")
+  if [[ -n $pids ]]; then
+    echo "Killing: $pids"
+    kill $pids
+  else
+    echo "No process found matching: $1" >&2
+    return 1
+  fi
 }
 
-ff() { [[ $# -gt 0 ]] || { echo "Usage: ff <file>" >&2; return 1; }; command -v fd &>/dev/null && fd -H -I "$1" || find . -name "*$1*" 2>/dev/null; }
+ff() {
+  [[ $# -gt 0 ]] || { echo "Usage: ff <file>" >&2; return 1; }
+
+  if command -v fd >/dev/null; then
+    fd -H -I "$1"
+  elif command -v find >/dev/null; then
+    find . -name "*$1*" 2>/dev/null
+  else
+    echo "Error: neither fd nor find is available" >&2
+    return 1
+  fi
+}
 
 smartcat() {
   [[ $# -gt 0 ]] || { command cat; return; }
