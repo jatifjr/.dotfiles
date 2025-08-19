@@ -9,21 +9,34 @@
   ;; Define source keys (raw keys from the keyboard)
   ;; These are the physical input keys Kanata listens to
   esc
-  caps
+  caps a s d f j k l ;
+  lsft rsft
+  lctl lalt lmet rmet ralt
 )
 
 (defvar
   tap-time 200  ;; Tap = under 200ms
+  tt $tap-time
   hold-time 200  ;; Hold = over 200ms
+  ht $hold-time
 )
 
 (defalias
-  hyp   (multi lsft lctl lalt lmet)  ;; Hyper (⌘ + ⌥ + ⌃ + ⇧)
-  esctl (tap-hold-press $tap-time $hold-time esc lctl)  ;; Esc when tapped, Ctrl when held
+  esctl (tap-hold $tt $ht esc (multi lctl lalt lmet lsft))  ;; Esc when tapped, Hyper (⌃ + ⌥ + ⌘ + ⇧) when held
+  a-mod (tap-hold $tt $ht a lctl)
+  s-mod (tap-hold $tt $ht s lalt)
+  d-mod (tap-hold $tt $ht d lmet)
+  f-mod (tap-hold $tt $ht f lsft)
+  j-mod (tap-hold $tt $ht j lsft)
+  k-mod (tap-hold $tt $ht k lmet)
+  l-mod (tap-hold $tt $ht l lalt)
+  ;-mod (tap-hold $tt $ht ; lctl)
 )
 
 (deflayer base
   ;; Base layer mapping (default behavior when active)
-  @hyp
-  @esctl
+  XX
+  @esctl @a-mod @s-mod @d-mod @f-mod @j-mod @k-mod @l-mod @;-mod
+  XX XX
+  XX XX XX XX XX
 )
