@@ -4,7 +4,7 @@
 [[ -o interactive ]] || return
 
 # Uncomment to enable profiling
-zmodload zsh/zprof
+# zmodload zsh/zprof
 
 # --- XDG paths ---
 export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-${HOME}/.config}"
@@ -227,4 +227,4 @@ alias plugins-rebuild='antidote bundle < "${ZSH_PLUGIN_LIST_FILE}" >| "${ZSH_PLU
 unfunction _setup_homebrew _setup_fnm _setup_zoxide 2>/dev/null
 
 # --- Profiling ---
-zprof
+# zprof
