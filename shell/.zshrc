@@ -4,7 +4,9 @@
 [[ -o interactive ]] || return
 
 # Uncomment to enable profiling
-# zmodload zsh/zprof
+if [[ -n "$ZSH_PROFILING" ]]; then
+  zmodload zsh/zprof
+fi
 
 # --- XDG paths ---
 export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-${HOME}/.config}"
@@ -12,28 +14,28 @@ export XDG_DATA_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}"
 export XDG_CACHE_HOME="${XDG_CACHE_HOME:-${HOME}/.cache}"
 export XDG_STATE_HOME="${XDG_STATE_HOME:-${HOME}/.local/state}"
 
+# Cache dirs
 export ZSH_CACHE_DIR="${XDG_CACHE_HOME}/zsh"
 export ZSH_COMPDUMP="${ZSH_CACHE_DIR}/.zcompdump"
 export HISTFILE="${XDG_STATE_HOME}/zsh/history"
-
-# Common dirs
-export PROJECTS_DIR="${HOME}/Projects"
-export WORK_DIR="${HOME}/Projects/work"
 
 # Create needed dirs
 mkdir -p \
   "${ZSH_CACHE_DIR}" \
   "${XDG_STATE_HOME}/zsh" \
   "${XDG_CACHE_HOME}/less" \
-  "${PROJECTS_DIR}" \
-  "${WORK_DIR}"
 
 # --- Environment / PATH ---
 export EDITOR="${EDITOR:-nvim}"
 export VISUAL="${VISUAL:-$EDITOR}"
 export PAGER="${PAGER:-less}"
 export BROWSER="${BROWSER:-open}"
-export PNPM_HOME="${HOME}/Library/pnpm"
+# pnpm is installed in different locations on macOS and Linux
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  export PNPM_HOME="${HOME}/Library/pnpm"
+else
+  export PNPM_HOME="${HOME}/.local/share/pnpm"
+fi
 
 typeset -U path
 path=(
@@ -56,13 +58,15 @@ setopt EXTENDED_HISTORY HIST_IGNORE_SPACE HIST_REDUCE_BLANKS HIST_SAVE_NO_DUPS \
 setopt ALWAYS_TO_END AUTO_MENU COMPLETE_IN_WORD MENU_COMPLETE
 
 # --- Tools (lazy) ---
-_setup_homebrew() {
-  if [[ -x "/opt/homebrew/bin/brew" ]]; then
-    eval "$(/opt/homebrew/bin/brew shellenv)"
-  elif [[ -x "/usr/local/bin/brew" ]]; then
-    eval "$(/usr/local/bin/brew shellenv)"
-  fi
-}
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  _setup_homebrew() {
+    if [[ -x "/opt/homebrew/bin/brew" ]]; then
+      eval "$(/opt/homebrew/bin/brew shellenv)"
+    elif [[ -x "/usr/local/bin/brew" ]]; then
+      eval "$(/usr/local/bin/brew shellenv)"
+    fi
+  }
+fi
 
 _setup_fnm() {
   command -v fnm >/dev/null 2>&1 && eval "$(fnm env --use-on-cd --shell zsh)"
@@ -86,15 +90,15 @@ bindkey -e
 skip_global_compinit=1
 
 # Homebrew site-functions if available
-if [[ -n "${HOMEBREW_PREFIX}" && -d "${HOMEBREW_PREFIX}/share/zsh/site-functions" ]]; then
+if [[ "$OSTYPE" == "darwin"* && -n "${HOMEBREW_PREFIX}" && -d "${HOMEBREW_PREFIX}/share/zsh/site-functions" ]]; then
   fpath=("${HOMEBREW_PREFIX}/share/zsh/site-functions" "${fpath[@]}")
 fi
 
 autoload -Uz compinit
 if [[ -e "${ZSH_COMPDUMP}" && -n ${ZSH_COMPDUMP}(Nm+24) ]]; then
-  compinit -i -d "${ZSH_COMPDUMP}"
+  compinit -i -d "${ZSH_COMPDUMP}" || compinit -C -d "${ZSH_COMPDUMP}"
 else
-  compinit -C -d "${ZSH_COMPDUMP}"
+  compinit -C -d "${ZSH_COMPDUMP}" || compinit
 fi
 
 # Minimal, fast styles
@@ -142,6 +146,12 @@ fi
 # find (prefer fd if available)
 if command -v fd >/dev/null; then
   alias find='fd'
+fi
+
+# tailscale (if available)
+if command -v tailscale >/dev/null; then
+  alias ts='tailscale'
+  alias tss='tailscale status'
 fi
 
 # cat (always smartcat, defined later in config)
@@ -252,9 +262,9 @@ fi
 ZSH_PLUGIN_BUNDLE="${ZSH_CACHE_DIR}/antidote_plugins.zsh"
 if command -v antidote >/dev/null 2>&1; then
   if [[ ! -r "${ZSH_PLUGIN_BUNDLE}" || "${ZSH_PLUGIN_LIST_FILE}" -nt "${ZSH_PLUGIN_BUNDLE}" ]]; then
-    antidote bundle < "${ZSH_PLUGIN_LIST_FILE}" >| "${ZSH_PLUGIN_BUNDLE}"
+    antidote bundle < "${ZSH_PLUGIN_LIST_FILE}" >| "${ZSH_PLUGIN_BUNDLE}" 2>/dev/null || true
   fi
-  [[ -r "${ZSH_PLUGIN_BUNDLE}" ]] && source "${ZSH_PLUGIN_BUNDLE}"
+  [[ -r "${ZSH_PLUGIN_BUNDLE}" ]] && source "${ZSH_PLUGIN_BUNDLE}" || true
 fi
 
 : ${ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE:='fg=242'}
@@ -266,4 +276,7 @@ alias plugins-rebuild='antidote bundle < "${ZSH_PLUGIN_LIST_FILE}" >| "${ZSH_PLU
 unfunction _setup_homebrew _setup_fnm _setup_zoxide 2>/dev/null
 
 # --- Profiling ---
-# zprof
+if [[ -n "$ZSH_PROFILING" ]]; then
+  zprof
+fi
+alias zprof='ZSH_PROFILING=1 zsh -i -c exit | head -n 12'

@@ -22,15 +22,15 @@
 )
 
 (defalias
-  esctl (tap-hold $tt $ht esc (multi lctl lalt lmet lsft))  ;; Esc when tapped, Hyper (⌃ + ⌥ + ⌘ + ⇧) when held
-  a-mod (tap-hold $tt $ht a lctl)
-  s-mod (tap-hold $tt $ht s lalt)
-  d-mod (tap-hold $tt $ht d lmet)
-  f-mod (tap-hold $tt $ht f lsft)
-  j-mod (tap-hold $tt $ht j lsft)
-  k-mod (tap-hold $tt $ht k lmet)
-  l-mod (tap-hold $tt $ht l lalt)
-  ;-mod (tap-hold $tt $ht ; lctl)
+  esctl (tap-hold-release $tt $ht esc (multi lctl lalt lmet lsft))  ;; Esc when tapped, Hyper (⌃ + ⌥ + ⌘ + ⇧) when held
+  a-mod (tap-hold-release $tt $ht a lctl)
+  s-mod (tap-hold-release $tt $ht s lalt)
+  d-mod (tap-hold-release $tt $ht d lmet)
+  f-mod (tap-hold-release $tt $ht f lsft)
+  j-mod (tap-hold-release $tt $ht j lsft)
+  k-mod (tap-hold-release $tt $ht k lmet)
+  l-mod (tap-hold-release $tt $ht l lalt)
+  ;-mod (tap-hold-release $tt $ht ; lctl)
 )
 
 (deflayer base
