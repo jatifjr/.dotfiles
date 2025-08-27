@@ -34,7 +34,7 @@ A symlink farm manager, perfect for managing dotfiles in a clean, version-contro
 brew install stow
 ```
 
-### [kanata](https://github.com/jtroo/kanata)
+### [kanata](https://github.com/jtroo/kanata)(Optional)
 
 Improve keyboard comfort and usability with advanced customization.
 
@@ -143,6 +143,16 @@ A zero-config VPN that keeps your Internet connection private and secure.
 
 ```bash
 brew install --cask tailscale-app
+```
+
+### [Hyperkey](https://hyperkey.app)
+
+The extra macOS modifier key
+
+**Install:**
+
+```bash
+brew install --cask hyperkey
 ```
 
 ### [Ghostty](https://ghostty.org/)
