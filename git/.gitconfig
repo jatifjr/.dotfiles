@@ -1,81 +1,42 @@
-# ============================================================
-# Global Git Configuration
-# ============================================================
-
 [user]
     name = jatifjr
     email = 90365537+jatifjr@users.noreply.github.com
-    # Uncomment if using GPG or SSH commit signing
-    # signingkey = your-gpg-or-ssh-key-id
-
+[credential]
+	helper = osxkeychain
+[init]
+	defaultBranch = main
 [core]
-    editor = nvim                      # Change to your editor
-    autocrlf = input                   # Safe for macOS/Linux; set to 'true' on Windows
-    excludesfile = ~/.gitignore_global # Use global gitignore
-    pager = less -RFX                  # No pagination if output fits in terminal
-    fsmonitor = true                   # Speed up status checks (Git 2.36+)
-
+	editor = nvim
+	autocrlf = input
+	excludesfile = /Users/jatifjr/.gitignore_global
 [color]
-    ui = auto
-
+	ui = auto
 [alias]
-    # Status & branch navigation
-    st = status -sb
-    br = branch
-    co = checkout
-    sw = switch
-
-    # Commits
-    ci = commit
-    amend = commit --amend --no-edit
+	st = status
+	co = checkout
+	sw = switch
+	br = branch
+	ci = commit
+	lg = log --oneline --graph --decorate --all
+	df = diff
+	ammend = commit --amend --no-edit
     unstage = reset HEAD --
     fix = commit --fixup
     squash = commit --squash
-
-    # Logs
-    lg = log --oneline --graph --decorate --all
-    ll = log --stat
-    lga = log --oneline --graph --decorate --all --abbrev-commit
-
-    # Diffs
-    df = diff
-    dc = diff --cached
-
-    # Undo helpers (safe)
     undo = reset --soft HEAD~1
-    discard = checkout --              # Discard changes in working dir
+    discard = checkout --
     wipe = !git reset --hard && git clean -fd
-
-    # Fetch & sync
-    fp = fetch --prune
     up = !git pull --rebase --autostash
-
 [merge]
-    tool = nvimdiff
-    conflictstyle = diff3
-
+	tool = nvimdiff
 [diff]
-    tool = nvimdiff
-
+	tool = nvimdiff
 [push]
-    default = simple
-    autoSetupRemote = true             # Automatically track upstream on first push
-
+	default = simple
+	autoSetupRemote = true
 [pull]
-    ff = only                          # Disallow merge commits from pull
-    rebase = true                      # Rebase instead of merge by default
-
-[init]
-    defaultBranch = main
-
+	rebase = true
 [fetch]
-    prune = true
-
-[rerere]
-    enabled = true                     # Remember merge conflict resolutions
-
+	prune = true
 [commit]
-    verbose = true                     # Show diff when committing
-
-[url "git@github.com:jatifjr/"]
-    insteadOf = https://github.com/jatifjr/
+	verbose = true

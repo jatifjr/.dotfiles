@@ -1,8 +1,4 @@
-# ======================
-# OS-SPECIFIC
-# ======================
-
-# macOS
+# --- OS ---
 .DS_Store
 .AppleDouble
 .LSOverride
@@ -11,106 +7,63 @@ Icon?
 .Spotlight-V100
 .Trashes
 .fseventsd
-
-# Windows
 Thumbs.db
 ehthumbs.db
 Desktop.ini
 $RECYCLE.BIN/
-
-# Linux
 *~
 .nfs*
 
-# ======================
-# EDITOR / IDE
-# ======================
-
-# VSCode
+# --- EDITOR / IDE ---
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
-
-# IntelliJ/WebStorm
 .idea/
 *.iml
-
-# Other editors
 *.sublime-project
 *.sublime-workspace
 .history/
+*.swp
+*.swx
 
-# ======================
-# NODE / WEB DEV
-# ======================
-
-# Dependencies
+# --- NODE / WEB ---
 node_modules/
-
-# Build output
 dist/
 build/
 .next/
 out/
 .tmp/
-temp/
+.cache/
+storybook-static/
+.vercel/
+.turbo/
+.parcel-cache/
 
 # Logs
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-# Optional npm/yarn/pnpm cache
+# Optional caches
 .npm
 .yarn
 .pnpm
 
-# Lockfiles (ignore ones you don't use)
-package-lock.json
-yarn.lock
-pnpm-lock.yaml
-
-# ======================
-# ENV / CONFIG FILES
-# ======================
-
+# --- ENV / CONFIG ---
 .env*
 !.env*example
 
-# ======================
-# TYPESCRIPT
-# ======================
-
+# --- TYPESCRIPT ---
 *.tsbuildinfo
 *.tscache
 
-# ======================
-# TESTING
-# ======================
-
+# --- TESTING ---
 coverage/
 .jest/
 
-# ======================
-# FRAMEWORK-SPECIFIC
-# ======================
-
-# Next.js
-.next/
-out/
-
-# Create React App
-build/
-
-# Storybook
-storybook-static/
-
-# ======================
-# MISC / CACHES
-# ======================
-
-.cache/
+# --- LINT / MISC ---
 .eslintcache
