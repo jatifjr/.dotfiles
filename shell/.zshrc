@@ -42,11 +42,11 @@ zstyle ':vcs_info:*' enable git
 zstyle ':vcs_info:*' check-for-changes true
 zstyle ':vcs_info:*' unstagedstr '*'
 zstyle ':vcs_info:*' stagedstr '+'
-zstyle ':vcs_info:*' formats ' %F{242}%b%c%u%f'
-zstyle ':vcs_info:*' actionformats ' %F{242}%b|%a%c%u%f'
+zstyle ':vcs_info:*' formats ' %b%c%u'
+zstyle ':vcs_info:*' actionformats ' %b|%a%c%u'
 
 precmd() { vcs_info }
-PROMPT='%F{cyan}%2~%f${vcs_info_msg_0_} %F{magenta}%#%f '
+PROMPT='%F{cyan}%2~%f%F{242}${vcs_info_msg_0_}%f %F{magenta}%#%f '
 
 # --- Aliases ---
 alias c='clear'
@@ -78,14 +78,12 @@ command -v fd >/dev/null 2>&1 && alias find='fd'
 command -v tailscale >/dev/null 2>&1 && alias ts='tailscale'
 
 alias g='git'
-alias gbr='git branch'
-alias gca='git commit -am'
-alias glg='git log --oneline --graph --decorate --all'
-alias gpl='git pull --rebase'
-alias gpu='git push'
-alias grs='git restore'
-alias gst='git status -sb'
-alias gsw='git switch'
+alias gst='git st -sb'
+alias gco='git co'
+alias gsw='git sw'
+alias gbr='git br'
+alias gci='git ci -am'
+alias glg='git lg'
 
 [[ -d ~/.dotfiles ]] && alias cdd='cd ~/.dotfiles'
 
