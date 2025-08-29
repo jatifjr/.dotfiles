@@ -1,5 +1,14 @@
 .DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+.Spotlight-V100
+.Trashes
+.fseventsd
 Thumbs.db
-.Trash
-*.swp
-*.bak
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*~
+.nfs*
