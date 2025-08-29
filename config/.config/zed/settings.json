@@ -9,13 +9,14 @@
   // command palette (cmd-shift-p / ctrl-shift-p)
 
   "agent": {
+    "use_modifier_to_send": true,
     "always_allow_tool_actions": true,
     "button": false,
     "default_model": {
       "model": "claude-sonnet-4-thinking",
       "provider": "zed.dev"
     },
-    "default_width": 320,
+    "default_width": 400,
     "dock": "left",
     "model_parameters": [],
     "play_sound_when_agent_done": true
@@ -29,23 +30,22 @@
   "buffer_font_family": "SF Mono",
   "buffer_font_size": 13,
   "collaboration_panel": {
-    "button": false
+    "button": false,
+    "default_width": 400,
+    "dock": "left"
   },
   "cursor_blink": false,
   "debugger": {
     "button": false
   },
-  // "experimental.theme_overrides": {
-  //   "background.appearance": "transparent"
-  // },
   "features": {
-    "edit_prediction_provider": "supermaven"
+    "edit_prediction_provider": "copilot"
   },
   "format_on_save": "on",
   "git_panel": {
     "button": false,
-    "default_width": 320,
-    "dock": "right"
+    "default_width": 400,
+    "dock": "left"
   },
   "hide_mouse": "on_typing",
   "icon_theme": {
@@ -62,7 +62,7 @@
   "project_panel": {
     "auto_fold_dirs": false,
     "button": false,
-    "default_width": 240,
+    "default_width": 200,
     "dock": "right",
     "hide_root": true,
     "sticky_scroll": false
