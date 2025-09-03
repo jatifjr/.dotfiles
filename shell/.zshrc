@@ -78,12 +78,12 @@ command -v fd >/dev/null 2>&1 && alias find='fd'
 command -v tailscale >/dev/null 2>&1 && alias ts='tailscale'
 
 alias g='git'
-alias gst='git st -sb'
-alias gco='git co'
+alias ga='git add'
+alias gb='git br'
+alias gc='git ci'
+alias gl='git lg'
+alias gs='git st'
 alias gsw='git sw'
-alias gbr='git br'
-alias gci='git ci -am'
-alias glg='git lg'
 
 [[ -d ~/.dotfiles ]] && alias cdd='cd ~/.dotfiles'
 

@@ -1,42 +1,84 @@
 [user]
     name = jatifjr
     email = 90365537+jatifjr@users.noreply.github.com
+
 [credential]
-	helper = osxkeychain
-[init]
-	defaultBranch = main
+    helper = osxkeychain
+
 [core]
-	editor = nvim
-	autocrlf = input
-	excludesfile = /Users/jatifjr/.gitignore_global
-[color]
-	ui = auto
+    editor = nvim
+    autocrlf = input
+    excludesfile = /Users/jatifjr/.gitignore_global
+    fsmonitor = true
+    untrackedCache = true
+
 [alias]
-	st = status
-	co = checkout
-	sw = switch
-	br = branch
-	ci = commit
-	lg = log --oneline --graph --decorate --all
-	df = diff
-	ammend = commit --amend --no-edit
-    unstage = reset HEAD --
-    fix = commit --fixup
-    squash = commit --squash
-    undo = reset --soft HEAD~1
-    discard = checkout --
-    wipe = !git reset --hard && git clean -fd
-    up = !git pull --rebase --autostash
-[merge]
-	tool = nvimdiff
-[diff]
-	tool = nvimdiff
-[push]
-	default = simple
-	autoSetupRemote = true
-[pull]
-	rebase = true
-[fetch]
-	prune = true
+    br = branch
+    sw = switch
+    nb = switch -c
+    amend = commit --amend --no-edit
+    ci = commit
+    uncommit = reset HEAD~1
+    dc = diff --cached
+    dd = diff --
+    df = diff
+    prune-remote = fetch --prune
+    ld = log --oneline --decorate --graph --follow --
+    lg = log --oneline --decorate --graph -10
+    discard = restore --source=HEAD --
+    unstage = restore --staged
+    sparse-init = sparse-checkout init --cone
+    sparse-set = sparse-checkout set
+    sls = stash list
+    spop = stash pop
+    ss = stash push -u
+    st = status -sb
+
+[branch]
+    sort = -committerdate
+
+[column]
+    ui = auto
+
 [commit]
-	verbose = true
+    verbose = true
+
+[diff]
+    algorithm = histogram
+    colorMoved = plain
+    mnemonicPrefix = true
+    renames = true
+
+[fetch]
+    all = true
+    prune = true
+    pruneTags = true
+
+[help]
+    autocorrect = prompt
+
+[init]
+    defaultBranch = main
+
+[merge]
+    conflictstyle = zdiff3
+
+[pull]
+    rebase = true
+
+[push]
+    autoSetupRemote = true
+    default = simple
+    followTags = true
+
+[rebase]
+    autoSquash = true
+    autoStash = true
+    updateRefs = true
+
+[rerere]
+    enabled = true
+    autoupdate = true
+
+[tag]
+    sort = version:refname
