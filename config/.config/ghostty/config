@@ -4,6 +4,7 @@ config-file = ?theme
 config-file = ?ui
 config-file = ?keybinds
 confirm-close-surface = false
+quit-after-last-window-closed = true
 shell-integration-features = no-cursor,sudo,title
 clipboard-read = allow
 clipboard-write = allow

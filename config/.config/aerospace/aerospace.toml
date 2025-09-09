@@ -218,16 +218,16 @@ shift-down = ['volume set 0', 'mode main']
 
 [[on-window-detected]]
 if.app-id = 'com.mitchellh.ghostty'
-run = ['layout tiling', 'move-node-to-workspace 1'] # mnemonics 1 - Terminal
+run = 'move-node-to-workspace 1'
 
-# [[on-window-detected]]
-# if.app-id = 'app.zen-browser.zen'
-# run = 'move-node-to-workspace 2'  # mnemonics 2 - Web browser
+[[on-window-detected]]
+if.app-id = 'com.apple.Safari'
+run = 'move-node-to-workspace 2'
 
 [[on-window-detected]]
 if.app-id = 'com.apple.Passwords'
-run = 'layout floating'           # floating - Passwords
+run = 'layout floating'
 
 [[on-window-detected]]
 if.app-id = 'Keycastr'
-run = 'layout floating' # floating - Keycastr
+run = 'layout floating'
