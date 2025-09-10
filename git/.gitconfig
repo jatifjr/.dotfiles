@@ -8,7 +8,7 @@
 [core]
     editor = nvim
     autocrlf = input
-    excludesfile = /Users/jatifjr/.gitignore_global
+    excludesfile = /Users/jatifjr/.global.gitignore
     fsmonitor = true
     untrackedCache = true
 
