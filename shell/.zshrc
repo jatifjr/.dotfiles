@@ -5,8 +5,8 @@
 [[ -n "$ZSH_PROFILING" ]] && zmodload zsh/zprof
 
 # --- History ---
-HISTSIZE=50000
-SAVEHIST=50000
+HISTSIZE=100000
+SAVEHIST=100000
 
 # --- Zsh options ---
 setopt AUTO_CD AUTO_PUSHD PUSHD_IGNORE_DUPS PUSHD_SILENT
