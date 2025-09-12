@@ -1,176 +1,81 @@
-# Dotfiles Management with GNU Stow
+# My Dotfiles
 
-This repository contains my personal dotfiles, organized for easy management with [GNU Stow](https://www.gnu.org/software/stow/).
+This repository contains my personal dotfiles, managed with [GNU Stow](https://www.gnu.org/software/stow/). Stow creates symlinks from this repository to the correct locations in your home directory.
 
 ## Structure
 
-```
-~/.dotfiles/
-├── config/          # Application configurations
-│   └── .config/
-│       ├── ghostty/
-│       ├── nvim/
-│       └── ...
-├── git/             # Git configurations
-│   ├── .gitconfig
-│   ├── .gitignore_global
-│   └── ...
-├── shell/           # Shell configurations
-│   ├── .zshrc
-│   └── ...
-└── ...
+This repository is organized into packages, where each top-level directory is a package that corresponds to a category of configuration.
+
+- `shell/`: Shell configurations (e.g., `.zshrc`).
+- `git/`: Git configurations (e.g., `.gitconfig`).
+- `config/`: App configs that live in `~/.config/`, but also some specific app config that is not inside `~/.config` like `~/.hammerspoon` or `~/.colima`.
+
+## Prerequisites
+
+Install GNU Stow:
+
+```sh
+# On macOS
+brew install stow
+
+# On Debian/Ubuntu
+sudo apt-get install stow
 ```
 
 ## Usage
 
-### Prerequisites
+1.  **Clone the repository:**
 
-Install GNU Stow:
+    ```sh
+    git clone https://github.com/jatifjr/dotfiles.git ~/.dotfiles
+    ```
 
-```bash
-# macOS
-brew install stow
-```
+2.  **Navigate into the directory:**
 
-```bash
-# Ubuntu/Debian
-sudo apt install stow
-```
+    ```sh
+    cd ~/.dotfiles
+    ```
 
-### Available Packages
+3.  **Stow the packages:**
+    This creates the symlinks. You can stow multiple packages or just specific ones.
 
-The following packages are available for stowing:
+    ```sh
+    # Stow one or multiple packages in the repository
+    stow <package-name> <another-package-name>
+    ```
 
-- `config` - Application configurations (goes to ~/.config/)
-- `shell` - Shell configurations (.zshrc, etc.)
-- `git` - Git configurations (.gitconfig, etc.)
+## Managing Packages
 
-### Stowing Packages
+- **Update (Restow):** To apply changes from the repository to your system.
 
-Navigate to the dotfiles directory and stow the desired packages:
+  ```sh
+  stow -R <package-name>
+  ```
 
-```bash
-cd ~/.dotfiles
-```
-
-```bash
-# Stow individual packages
-stow config     # Links ~/.config/* to dotfiles
-```
-
-```bash
-# Stow multiple specific packages
-stow config shell git
-```
-
-### Unstowing Packages
-
-To remove symlinks (unstow):
-
-```bash
-# Unstow specific packages
-stow -D config shell git
-```
-
-```bash
-# Unstow individual packages
-stow -D config
-```
-
-### Restowing Packages
-
-To update existing symlinks after making changes:
-
-```bash
-# Restow specific packages
-stow -R config shell git
-```
-
-```bash
-# Restow individual packages
-stow -R config
-```
-
-## What Gets Linked
-
-After stowing the packages, you'll have these symlinks:
-
-- `~/.config/ghostty/` → `~/.dotfiles/config/.config/ghostty/`
-- `~/.config/nvim/` → `~/.dotfiles/config/.config/nvim/`
-- `~/.gitconfig` → `~/.dotfiles/git/.gitconfig`
-- `~/.gitignore_global` → `~/.dotfiles/git/.gitignore_global`
-- `~/.zshrc` → `~/.dotfiles/shell/.zshrc`
-- ...
+- **Remove (Unstow):** To remove a package's symlinks.
+  ```sh
+  stow -D <package-name>
+  ```
 
 ## Useful Commands
 
-```bash
-# Dry run (simulate without making changes)
-stow -n config shell git
-```
+- **Dry Run:** Preview what `stow` will do without making changes.
 
-```bash
-# Verbose output (see what's being linked)
-stow -v config shell git
-```
+  ```sh
+  stow -n <package-name>
+  ```
 
-```bash
-# Check what's currently stowed
-find ~ -type l -ls | grep dotfiles
-```
+- **Verbose:** See details about the files being linked.
+  ```sh
+  stow -v <package-name>
+  ```
 
 ## Adding New Configurations
 
-1. Create the appropriate directory structure in the relevant package
-2. Add your configuration files
-3. Restow the package: `stow -R <package-name>`
+1.  Create the same directory structure for the config file inside the appropriate package in this repository. For example, to add a config for `new-app` that lives at `~/.config/new-app/config.toml`, you would create `~/.dotfiles/config/.config/new-app/config.toml`.
+2.  Add your configuration file(s) there.
+3.  Restow the package: `stow -R config`.
 
 ## Troubleshooting
 
-### Conflicts with Existing Files
-
-If you get conflicts with existing files:
-
-1. Back up the existing file:
-
-   ```bash
-   mv ~/.config/app/config ~/.config/app/config.backup
-   ```
-
-2. Stow the package:
-
-   ```bash
-   stow config
-   ```
-
-3. Compare and merge if needed
-
-### Broken Symlinks
-
-To find and remove broken symlinks:
-
-```bash
-find ~ -type l ! -exec test -e {} \; -print | grep dotfiles
-```
-
-### List Available Packages
-
-To see what packages are available to stow:
-
-```bash
-ls -d */ | sed 's|/||'
-```
-
-## Applications Configured
-
-- **Ghostty**: Terminal emulator
-- **Neovim**: Text editor
-- **Git**: Version control
-- **Zsh**: Shell
-
-## Best Practices
-
-- Always specify package names explicitly when stowing
-- Use dry run (`-n`) flag to preview changes before applying
-- Keep packages logically organized (one per application/category)
-- Regularly check for broken symlinks after updates
+If `stow` reports a conflict with an existing file, you can either remove the file from your home directory (back it up first!) or move it into this repository, then run `stow` again.

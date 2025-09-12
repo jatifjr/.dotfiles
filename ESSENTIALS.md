@@ -1,17 +1,17 @@
-# macOS Essential Tools
+# MacOS Essentials
 
-## CLIs
+---
 
-These are my must-have CLI tools for productivity, development, and system management.
+## Core
 
 ### [zsh](https://zsh.sourceforge.io/)
 
-A powerful shell with advanced scripting features and customization options, replacing the default `bash` on macOS.
+A powerful shell with advanced scripting features and customization options. It is my shell of choice on macOS.
 
 **Install:**
 
-```bash
-# zsh is already installed on macOS
+```sh
+# Should be pre-installed on macOS
 ```
 
 ### [Homebrew](https://brew.sh/)
@@ -20,31 +20,34 @@ The package manager for macOS. Makes installing and managing CLI tools and apps 
 
 **Install:**
 
-```bash
+```sh
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
 
-### [GNU Stow](https://www.gnu.org/software/stow/)
+---
+
+## Formulae
+
+These are my must-have CLI tools for productivity, development, and system management.
+
+### [stow](https://www.gnu.org/software/stow/)
 
 A symlink farm manager, perfect for managing dotfiles in a clean, version-controlled way.
 
 **Install:**
 
-```bash
+```sh
 brew install stow
 ```
 
-### [kanata](https://github.com/jtroo/kanata)(Optional)
+### [tmux](https://github.com/tmux/tmux)
 
-Improve keyboard comfort and usability with advanced customization.
-
+A terminal multiplexer that allows multiple terminal sessions to be accessed and controlled from a single window.
 **Install:**
 
-Read this discussion.
-
-[How to use Kanata from Homebrew and LaunchCtl for macOS #1537](https://github.com/jtroo/kanata/discussions/1537)
-
-You'll figure it out.
+```sh
+brew install tmux
+```
 
 ### [fzf](https://github.com/junegunn/fzf)
 
@@ -52,7 +55,7 @@ A command-line fuzzy finder. Integrates with many tools for quick file, command,
 
 **Install:**
 
-```bash
+```sh
 brew install fzf
 $(brew --prefix)/opt/fzf/install  # Set up key bindings & fuzzy auto-completion
 ```
@@ -63,17 +66,17 @@ A simple, fast, and user-friendly alternative to `find` for searching files.
 
 **Install:**
 
-```bash
+```sh
 brew install fd
 ```
 
-### [ripgrep](https://github.com/BurntSushi/ripgrep)
+### [rg](https://github.com/BurntSushi/ripgrep)
 
 A fast, recursive search tool for finding text patterns in files, similar to `grep` but optimized.
 
 **Install:**
 
-```bash
+```sh
 brew install ripgrep
 ```
 
@@ -83,7 +86,7 @@ Fast Node.js version manager written in Rust. Lightweight alternative to `nvm`.
 
 **Install:**
 
-```bash
+```sh
 brew install fnm
 ```
 
@@ -93,11 +96,11 @@ A fast, disk-space-efficient package manager for JavaScript/TypeScript projects.
 
 **Install:**
 
-```bash
+```sh
 brew install pnpm
 ```
 
-### [neovim](https://neovim.io/)
+### [nvim](https://neovim.io/)
 
 A hyper-extensible Vim-based text editor with modern improvements.
 
@@ -105,7 +108,7 @@ A hyper-extensible Vim-based text editor with modern improvements.
 
 You might want to read [this](https://github.com/nvim-lua/kickstart.nvim) before installing.
 
-```bash
+```sh
 brew install neovim
 ```
 
@@ -115,13 +118,13 @@ Container runtime for macOS with Docker & Kubernetes support, built on Lima.
 
 **Install:**
 
-```bash
+```sh
 brew install colima
 ```
 
 ---
 
-## Apps
+## Casks
 
 My go-to GUI applications for development and daily use.
 
@@ -131,7 +134,7 @@ An i3-like tiling window manager for macOS.
 
 **Install:**
 
-```bash
+```sh
 brew install --cask nikitabobko/tap/aerospace
 ```
 
@@ -141,18 +144,18 @@ A zero-config VPN that keeps your Internet connection private and secure.
 
 **Install:**
 
-```bash
+```sh
 brew install --cask tailscale-app
 ```
 
-### [Hyperkey](https://hyperkey.app)
+### [Hammerspoon](https://www.hammerspoon.org)
 
-The extra macOS modifier key
+A powerful automation tool for macOS that bridges system APIs with a Lua scripting engine. It's ideal for window management, custom shortcuts, and automating tasks.
 
 **Install:**
 
-```bash
-brew install --cask hyperkey
+```sh
+brew install --cask hammerspoon
 ```
 
 ### [Ghostty](https://ghostty.org/)
@@ -161,7 +164,7 @@ A modern, GPU-accelerated terminal emulator built for speed and usability.
 
 **Install:**
 
-```bash
+```sh
 brew install --cask ghostty
 ```
 
@@ -171,7 +174,7 @@ An AI-powered code editor that helps write, refactor, and understand code faster
 
 **Install:**
 
-```bash
+```sh
 brew install --cask cursor
 ```
 
@@ -181,17 +184,17 @@ A next-generation, collaborative code editor focused on performance and develope
 
 **Install:**
 
-```bash
+```sh
 brew install --cask zed
 ```
 
-### [Brave](https://brave.com/)
+### [Brave](https://brave.com/)(Optional)
 
 A privacy-first browser with built-in ad-blocking and performance optimizations.
 
 **Install:**
 
-```bash
+```sh
 brew install --cask brave-browser
 ```
 
@@ -201,6 +204,6 @@ A privacy-focused browser with productivity and customization features.
 
 **Install:**
 
-```bash
+```sh
 brew install --cask zen-browser
 ```

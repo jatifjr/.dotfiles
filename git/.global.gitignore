@@ -1,69 +1,28 @@
-# --- OS ---
+# macOS
 .DS_Store
 .AppleDouble
 .LSOverride
 Icon?
 ._*
-.Spotlight-V100
-.Trashes
-.fseventsd
+
+# Windows
 Thumbs.db
 ehthumbs.db
 Desktop.ini
 $RECYCLE.BIN/
+*.lnk
+
+# Linux
 *~
 .nfs*
 
-# --- EDITOR / IDE ---
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-.idea/
-*.iml
-*.sublime-project
-*.sublime-workspace
-.history/
+# Common editor/IDE noise (safe globally)
 *.swp
-*.swx
+*.swo
+*.tmp
+*.bak
+*.orig
 
-# --- NODE / WEB ---
-node_modules/
-dist/
-build/
-.next/
-out/
-.tmp/
-.cache/
-storybook-static/
-.vercel/
-.turbo/
-.parcel-cache/
-
-# Logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-
-# Optional caches
-.npm
-.yarn
-.pnpm
-
-# --- ENV / CONFIG ---
+# Environment files
 .env*
 !.env*example
-
-# --- TYPESCRIPT ---
-*.tsbuildinfo
-*.tscache
-
-# --- TESTING ---
-coverage/
-.jest/
-
-# --- LINT / MISC ---
-.eslintcache
