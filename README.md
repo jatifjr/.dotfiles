@@ -209,6 +209,16 @@ An i3-like tiling window manager for macOS.
 brew install --cask nikitabobko/tap/aerospace
 ```
 
+#### [Hammerspoon](https://www.hammerspoon.org)
+
+A powerful automation tool for macOS that bridges system APIs with a Lua scripting engine. It's ideal for window management, custom shortcuts, and automating tasks.
+
+**Install:**
+
+```sh
+brew install --cask hammerspoon
+```
+
 #### [Tailscale](https://tailscale.com/)
 
 A zero-config VPN that keeps your Internet connection private and secure.
@@ -219,14 +229,14 @@ A zero-config VPN that keeps your Internet connection private and secure.
 brew install --cask tailscale-app
 ```
 
-#### [Hammerspoon](https://www.hammerspoon.org)
+#### [Scroll Reverser](https://pilotmoon.com/scrollreverser/)
 
-A powerful automation tool for macOS that bridges system APIs with a Lua scripting engine. It's ideal for window management, custom shortcuts, and automating tasks.
+Scroll Reverser is a Mac app that reverses the direction of scrolling, with independent settings for trackpads and mice (including Magic Mouse).
 
 **Install:**
 
 ```sh
-brew install --cask hammerspoon
+brew install --cask scroll-reverser
 ```
 
 #### [Ghostty](https://ghostty.org/)
@@ -239,16 +249,6 @@ A modern, GPU-accelerated terminal emulator built for speed and usability.
 brew install --cask ghostty
 ```
 
-#### [Cursor](https://cursor.com/)
-
-An AI-powered code editor that helps write, refactor, and understand code faster.
-
-**Install:**
-
-```sh
-brew install --cask cursor
-```
-
 #### [Zed](https://zed.dev/) (Optional)
 
 A next-generation, collaborative code editor focused on performance and developer experience.
@@ -257,6 +257,16 @@ A next-generation, collaborative code editor focused on performance and develope
 
 ```sh
 brew install --cask zed
+```
+
+#### [Cursor](https://cursor.com/)
+
+An AI-powered code editor that helps write, refactor, and understand code faster.
+
+**Install:**
+
+```sh
+brew install --cask cursor
 ```
 
 #### [Brave](https://brave.com/) (Optional)
@@ -277,6 +287,16 @@ A privacy-focused browser with productivity and customization features.
 
 ```sh
 brew install --cask zen-browser
+```
+
+#### [Velja](https://sindresorhus.com/velja) (Optional)
+
+Powerful browser picker. Useful if you have multiple web browsers.
+
+**Install:**
+
+```sh
+# Download on the App Store
 ```
 
 ## Troubleshooting
