@@ -61,12 +61,12 @@ on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
     esc = 'mode main'
 
 # rules
-# Safari default to workspace 2
+# Safari default to workspace 1
 [[on-window-detected]]
     if.app-id = 'com.apple.Safari'
-    run = 'move-node-to-workspace 2'
+    run = 'move-node-to-workspace 1'
 
-# Passwords default to floating
-[[on-window-detected]]
-    if.app-id = 'com.apple.Passwords'
-    run = 'layout floating'
+# # Passwords default to floating
+# [[on-window-detected]]
+#     if.app-id = 'com.apple.Passwords'
+#     run = 'layout floating'

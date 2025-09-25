@@ -5,3 +5,4 @@ cursor-style-blink = false
 font-size = 14
 font-thicken = true
 font-family = SF Mono
+split-divider-color = #464646
