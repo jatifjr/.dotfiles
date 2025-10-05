@@ -5,17 +5,6 @@
 Icon?
 ._*
 
-# Windows
-Thumbs.db
-ehthumbs.db
-Desktop.ini
-$RECYCLE.BIN/
-*.lnk
-
-# Linux
-*~
-.nfs*
-
 # Common editor/IDE noise (safe globally)
 *.swp
 *.swo

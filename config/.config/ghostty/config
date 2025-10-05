@@ -3,16 +3,12 @@
 config-file = ?theme
 config-file = ?ui
 config-file = ?keybinds
-confirm-close-surface = false
 shell-integration-features = no-cursor,sudo,title
 quick-terminal-position = center
 quick-terminal-animation-duration = 0
-clipboard-read = allow
-clipboard-write = allow
 window-decoration = none
 window-padding-balance = true
 background-opacity = 0.50
 background-blur = 50
 unfocused-split-opacity = 1
-macos-titlebar-style = tabs
 macos-option-as-alt = true

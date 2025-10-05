@@ -113,7 +113,7 @@ This is a curated list of CLI tools and GUI applications that I use on macOS. Th
 
 These are my must-have CLI tools for productivity, development, and system management.
 
-#### [tmux](https://github.com/tmux/tmux)
+#### [**tmux**](https://github.com/tmux/tmux)
 
 A terminal multiplexer that allows multiple terminal sessions to be accessed and controlled from a single window.
 
@@ -123,7 +123,27 @@ A terminal multiplexer that allows multiple terminal sessions to be accessed and
 brew install tmux
 ```
 
-#### [fzf](https://github.com/junegunn/fzf)
+#### [**fd**](https://github.com/sharkdp/fd)
+
+A simple, fast, and user-friendly alternative to `find` for searching files.
+
+**Install:**
+
+```sh
+brew install fd
+```
+
+#### [**rg**](https://github.com/BurntSushi/ripgrep)
+
+A fast, recursive search tool for finding text patterns in files, similar to `grep` but optimized.
+
+**Install:**
+
+```sh
+brew install ripgrep
+```
+
+#### [**fzf**](https://github.com/junegunn/fzf)
 
 A command-line fuzzy finder. Integrates with many tools for quick file, command, and history search.
 
@@ -134,37 +154,17 @@ brew install fzf
 $(brew --prefix)/opt/fzf/install  # Set up key bindings & fuzzy auto-completion
 ```
 
-#### [fd](https://github.com/sharkdp/fd)
+#### [**volta**](https://volta.sh)
 
-A simple, fast, and user-friendly alternative to `find` for searching files.
-
-**Install:**
-
-```sh
-brew install fd
-```
-
-#### [rg](https://github.com/BurntSushi/ripgrep)
-
-A fast, recursive search tool for finding text patterns in files, similar to `grep` but optimized.
+The Hassle-Free JavaScript Tool Manager.
 
 **Install:**
 
 ```sh
-brew install ripgrep
+brew install volta
 ```
 
-#### [fnm](https://github.com/Schniz/fnm)
-
-Fast Node.js version manager written in Rust. Lightweight alternative to `nvm`.
-
-**Install:**
-
-```sh
-brew install fnm
-```
-
-#### [pnpm](https://pnpm.io/)
+#### [**pnpm**](https://pnpm.io/)
 
 A fast, disk-space-efficient package manager for JavaScript/TypeScript projects.
 
@@ -174,7 +174,7 @@ A fast, disk-space-efficient package manager for JavaScript/TypeScript projects.
 brew install pnpm
 ```
 
-#### [nvim](https://neovim.io/)
+#### [**nvim**](https://neovim.io/)
 
 A hyper-extensible Vim-based text editor with modern improvements.
 
@@ -185,21 +185,29 @@ You might want to read [this](https://github.com/nvim-lua/kickstart.nvim) before
 brew install neovim
 ```
 
-#### [colima](https://github.com/abiosoft/colima)
+#### [**btop**](https://github.com/aristocratos/btop)
 
-Container runtime for macOS with Docker & Kubernetes support, built on Lima.
+A resource monitor that shows usage and stats for processor, memory, disks, network and processes. Alternative to `htop`.
 
 **Install:**
 
 ```sh
-brew install colima
+brew install btop
 ```
+
+#### [**container**](https://github.com/apple/container)
+
+Container is a tool that you can use to create and run Linux containers as lightweight virtual machines on your Mac. It's written in Swift, and optimized for Apple silicon.
+
+**Install:**
+
+Download the latest signed installer package for container from the GitHub release page.
 
 ### Casks
 
 My go-to GUI applications for development and daily use. Items marked `(Optional)` are not part of the core setup.
 
-#### [AeroSpace](https://github.com/nikitabobko/AeroSpace) [BETA]
+#### [**AeroSpace**](https://github.com/nikitabobko/AeroSpace) [BETA]
 
 An i3-like tiling window manager for macOS.
 
@@ -209,27 +217,17 @@ An i3-like tiling window manager for macOS.
 brew install --cask nikitabobko/tap/aerospace
 ```
 
-#### [Hammerspoon](https://www.hammerspoon.org)
+#### [**Hyperkey**](https://hyperkey.app)
 
-A powerful automation tool for macOS that bridges system APIs with a Lua scripting engine. It's ideal for window management, custom shortcuts, and automating tasks.
-
-**Install:**
-
-```sh
-brew install --cask hammerspoon
-```
-
-#### [Tailscale](https://tailscale.com/)
-
-A zero-config VPN that keeps your Internet connection private and secure.
+The extra macOS modifier key. Convert the caps lock key or any modifier key to the hyper key(⌃⌥⌘⇧). The hyper key acts as an additional modifier key that can be used in any app with keyboard shortcuts. Or just remap caps lock to a more useful key.
 
 **Install:**
 
 ```sh
-brew install --cask tailscale-app
+brew install --cask hyperkey
 ```
 
-#### [Scroll Reverser](https://pilotmoon.com/scrollreverser/)
+#### [**Scroll Reverser**](https://pilotmoon.com/scrollreverser/)
 
 Scroll Reverser is a Mac app that reverses the direction of scrolling, with independent settings for trackpads and mice (including Magic Mouse).
 
@@ -239,7 +237,7 @@ Scroll Reverser is a Mac app that reverses the direction of scrolling, with inde
 brew install --cask scroll-reverser
 ```
 
-#### [Ghostty](https://ghostty.org/)
+#### [**Ghostty**](https://ghostty.org/)
 
 A modern, GPU-accelerated terminal emulator built for speed and usability.
 
@@ -249,7 +247,17 @@ A modern, GPU-accelerated terminal emulator built for speed and usability.
 brew install --cask ghostty
 ```
 
-#### [Zed](https://zed.dev/) (Optional)
+#### [**Tailscale**](https://tailscale.com/)
+
+A zero-config VPN that keeps your Internet connection private and secure.
+
+**Install:**
+
+```sh
+brew install --cask tailscale-app
+```
+
+#### [**Zed**](https://zed.dev/) (Optional)
 
 A next-generation, collaborative code editor focused on performance and developer experience.
 
@@ -259,17 +267,7 @@ A next-generation, collaborative code editor focused on performance and develope
 brew install --cask zed
 ```
 
-#### [Cursor](https://cursor.com/)
-
-An AI-powered code editor that helps write, refactor, and understand code faster.
-
-**Install:**
-
-```sh
-brew install --cask cursor
-```
-
-#### [Brave](https://brave.com/) (Optional)
+#### [**Brave**](https://brave.com/) (Optional)
 
 A privacy-first browser with built-in ad-blocking and performance optimizations.
 
@@ -279,17 +277,7 @@ A privacy-first browser with built-in ad-blocking and performance optimizations.
 brew install --cask brave-browser
 ```
 
-#### [Zen Browser](https://zen-browser.app/) (Optional)
-
-A privacy-focused browser with productivity and customization features.
-
-**Install:**
-
-```sh
-brew install --cask zen-browser
-```
-
-#### [Velja](https://sindresorhus.com/velja) (Optional)
+#### [**Velja**](https://sindresorhus.com/velja) (Optional)
 
 Powerful browser picker. Useful if you have multiple web browsers.
 

@@ -53,6 +53,97 @@
     "light": "Symbols Icon Theme",
     "mode": "system"
   },
+  "lsp": {
+    "gopls": {
+      "initialization_options": {
+        "hints": {
+          "assignVariableTypes": true,
+          "compositeLiteralFields": true,
+          "compositeLiteralTypes": true,
+          "constantValues": true,
+          "functionTypeParameters": true,
+          "parameterNames": true,
+          "rangeVariableTypes": true
+        }
+      }
+    },
+    "rust-analyzer": {
+      "initialization_options": {
+        "inlayHints": {
+          "closureReturnTypeHints": {
+            "enable": "always"
+          },
+          "lifetimeElisionHints": {
+            "enable": "skip_trivial",
+            "useParameterNames": true
+          },
+          "maxLength": null
+        }
+      }
+    },
+    "tailwindcss-language-server": {
+      "settings": {
+        "classFunctions": ["cva", "cx"],
+        "experimental": {
+          "classRegex": ["[cls|className]\\s\\:\\=\\s\"([^\"]*)"]
+        }
+      }
+    },
+    "vtsls": {
+      "settings": {
+        // For JavaScript:
+        "javascript": {
+          "inlayHints": {
+            "enumMemberValues": {
+              "enabled": true
+            },
+            "functionLikeReturnTypes": {
+              "enabled": true
+            },
+            "parameterNames": {
+              "enabled": "all",
+              "suppressWhenArgumentMatchesName": false
+            },
+            "parameterTypes": {
+              "enabled": true
+            },
+            "propertyDeclarationTypes": {
+              "enabled": true
+            },
+            "variableTypes": {
+              "enabled": true,
+              "suppressWhenTypeMatchesName": true
+            }
+          }
+        },
+        // For TypeScript:
+        "typescript": {
+          "inlayHints": {
+            "enumMemberValues": {
+              "enabled": true
+            },
+            "functionLikeReturnTypes": {
+              "enabled": true
+            },
+            "parameterNames": {
+              "enabled": "all",
+              "suppressWhenArgumentMatchesName": false
+            },
+            "parameterTypes": {
+              "enabled": true
+            },
+            "propertyDeclarationTypes": {
+              "enabled": true
+            },
+            "variableTypes": {
+              "enabled": true,
+              "suppressWhenTypeMatchesName": true
+            }
+          }
+        }
+      }
+    }
+  },
   "notification_panel": {
     "button": false
   },
@@ -91,8 +182,8 @@
     }
   },
   "theme": {
-    "dark": "Catppuccin Espresso (Blur)",
-    "light": "Catppuccin Latte (Blur)",
+    "dark": "Catppuccin Espresso (Blur) [Light]",
+    "light": "Catppuccin Latte (Blur) [Heavy]",
     "mode": "system"
   },
   "toolbar": {

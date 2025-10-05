@@ -1,84 +1,54 @@
 [user]
-    name = jatifjr
-    email = 90365537+jatifjr@users.noreply.github.com
+	name = jatifjr
+	email = 90365537+jatifjr@users.noreply.github.com
 
 [credential]
-    helper = osxkeychain
+	helper = osxkeychain
 
 [core]
-    editor = nvim
-    autocrlf = input
-    excludesfile = /Users/jatifjr/.global.gitignore
-    fsmonitor = true
-    untrackedCache = true
-
-[alias]
-    br = branch
-    sw = switch
-    nb = switch -c
-    amend = commit --amend --no-edit
-    ci = commit
-    uncommit = reset HEAD~1
-    dc = diff --cached
-    dd = diff --
-    df = diff
-    prune-remote = fetch --prune
-    ld = log --oneline --decorate --graph --follow --
-    lg = log --oneline --decorate --graph -10
-    discard = restore --source=HEAD --
-    unstage = restore --staged
-    sparse-init = sparse-checkout init --cone
-    sparse-set = sparse-checkout set
-    sls = stash list
-    spop = stash pop
-    ss = stash push -u
-    st = status -sb
-
-[branch]
-    sort = -committerdate
-
-[column]
-    ui = auto
-
-[commit]
-    verbose = true
-
-[diff]
-    algorithm = histogram
-    colorMoved = plain
-    mnemonicPrefix = true
-    renames = true
-
-[fetch]
-    all = true
-    prune = true
-    pruneTags = true
-
-[help]
-    autocorrect = prompt
+	editor = nvim
+	excludesfile = ~/.global.gitignore
+	autocrlf = input
+	precomposeunicode = true
+	fsmonitor = true
+	untrackedCache = true
 
 [init]
-    defaultBranch = main
+	defaultBranch = main
 
-[merge]
-    conflictstyle = zdiff3
+[fetch]
+	prune = true
 
 [pull]
-    rebase = true
+	rebase = true
 
 [push]
-    autoSetupRemote = true
-    default = simple
-    followTags = true
+	default = current
+	autoSetupRemote = true
+
+[merge]
+	conflictstyle = diff3
+
+[diff]
+	algorithm = histogram
 
 [rebase]
-    autoSquash = true
-    autoStash = true
-    updateRefs = true
+	autoStash = true
 
-[rerere]
-    enabled = true
-    autoupdate = true
+[color]
+	ui = auto
 
-[tag]
-    sort = version:refname
+[alias]
+	s = status -sb
+	b = branch -vv
+	c = commit
+	d = diff
+	l = log --graph --oneline --all
+	sw = switch
+	co = checkout
+	aa = add --all
+	cm = commit -m
+	ca = commit --amend
+	undo = reset HEAD~1
+	wip = commit -am "WIP"
+	clean-branches = !git branch --merged | grep -v '\\*\\|main\\|master' | xargs -n 1 git branch -d
