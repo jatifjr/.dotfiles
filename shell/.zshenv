@@ -21,6 +21,7 @@ export PAGER="${PAGER:-less}"
 export BROWSER="${BROWSER:-open}"
 export LESS='-RFXi'
 export LESSHISTFILE="$XDG_CACHE_HOME/less/history"
+export GPG_TTY=$(tty)
 
 # PATH setup
 typeset -U PATH path

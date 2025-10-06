@@ -1,6 +1,7 @@
 [user]
-	name = jatifjr
+	name = Ahmad Fajar Kusumajati
 	email = 90365537+jatifjr@users.noreply.github.com
+	signingkey = 33A4937314D94C27
 
 [credential]
 	helper = osxkeychain
