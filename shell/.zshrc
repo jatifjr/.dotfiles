@@ -24,10 +24,13 @@ if [[ -n "$HOMEBREW_PREFIX" && -d "$HOMEBREW_PREFIX/share/zsh/site-functions" ]]
   fpath=("$HOMEBREW_PREFIX/share/zsh/site-functions" $fpath)
 fi
 autoload -Uz compinit
-if [[ -e "$ZSH_COMPDUMP" && -n $(print -r -- "$ZSH_COMPDUMP"(Nm+24) 2>/dev/null) ]]; then
+local -a completion_files
+completion_files=($fpath[-1]/**/*/_*(N))
+if [[ ! -f "$ZSH_COMPDUMP" || ${#completion_files[@]} -ne $(cat "$ZSH_CACHE_DIR/.zcompcount" 2>/dev/null) ]]; then
   compinit -i -d "$ZSH_COMPDUMP"
+  echo ${#completion_files[@]} > "$ZSH_CACHE_DIR/.zcompcount"
 else
-  compinit -C -d "$ZSH_COMPDUMP"
+  compinit -C -i -d "$ZSH_COMPDUMP"
 fi
 zstyle ':completion:*' use-cache yes
 zstyle ':completion:*' cache-path "$ZSH_CACHE_DIR/.zcompcache"
@@ -80,4 +83,4 @@ source "$ANTIDOTE_BUNDLE" || true
 
 # End profiling
 [[ -n "$ZSH_PROFILING" ]] && zprof
-alias zprof='ZSH_PROFILING=1 zsh -i -c exit | head -n 12 && unset ZSH_PROFILING'
+alias zprof='time zsh -i -c exit && ZSH_PROFILING=1 zsh -i -c exit | head -n 12 && unset ZSH_PROFILING'

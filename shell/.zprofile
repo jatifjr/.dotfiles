@@ -8,6 +8,6 @@ command -v zoxide >/dev/null && eval "$(zoxide init --cmd cd zsh)"
 mkdir -p "$ZSH_CACHE_DIR" "$XDG_STATE_HOME/zsh" "$XDG_CACHE_HOME/less"
 
 # Auto-compile zshrc
-for rcfile in ~/.zshrc; do
-  [[ "$rcfile.zwc" -nt "$rcfile" ]] || zcompile "$rcfile" 2>/dev/null
-done
+if [[ ! ~/.zshrc.zwc -nt ~/.zshrc || ! -s ~/.zshrc.zwc ]]; then
+  zcompile ~/.zshrc 2>/dev/null
+fi
