@@ -15,7 +15,7 @@ export VOLTA_HOME="$XDG_DATA_HOME/volta"
 export VOLTA_FEATURE_PNPM=1
 
 # Defaults
-export EDITOR="${EDITOR:-nvim}"
+export EDITOR="${EDITOR:-vim}"
 export VISUAL="${VISUAL:-$EDITOR}"
 export PAGER="${PAGER:-less}"
 export BROWSER="${BROWSER:-open}"

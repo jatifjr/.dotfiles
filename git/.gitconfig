@@ -7,7 +7,7 @@
 	helper = osxkeychain
 
 [core]
-	editor = nvim
+	editor = vim
 	excludesfile = ~/.global.gitignore
 	autocrlf = input
 	precomposeunicode = true
