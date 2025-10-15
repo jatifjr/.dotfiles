@@ -1,0 +1,94 @@
+
+" Vim configuration file
+set nocompatible
+filetype plugin indent on
+syntax on
+
+set noswapfile
+set nobackup
+set nowritebackup
+set noundofile
+set viminfo=
+
+set notermguicolors
+set t_Co=16
+
+set autoindent
+set smarttab
+set backspace=indent,eol,start
+set clipboard=unnamedplus
+set belloff=all
+set hidden
+set autoread
+set history=10000
+set nrformats=bin,hex
+set shortmess=CF
+set startofline
+set nojoinspaces
+set formatoptions=tcqj
+set cpoptions-=_
+set completeopt=menu,popup
+set mouse=nvi
+set mousemodel=popup_setpos
+set ttimeout
+set ttimeoutlen=50
+set sidescroll=1
+set tabpagemax=50
+set incsearch
+set hlsearch
+set display=lastline
+set fillchars=vert:\│,fold:\·,foldsep:\│
+set laststatus=2
+set path=.,,
+set tags=./tags;,tags
+set sessionoptions+=unix,slash
+set viewoptions+=unix,slash
+set wildmenu
+set wildoptions=pum,tagfile
+set switchbuf=uselast
+set completeopt=menu,popup
+
+let g:editorconfig = 1
+
+runtime macros/matchit.vim
+
+
+" --- Extra options not in sensible.vim ---
+
+" File safety
+set noswapfile
+set nobackup
+set nowritebackup
+set noundofile
+set viminfo=
+
+" Clipboard and input
+set clipboard=unnamedplus
+set belloff=all
+set hidden
+set mouse=nvi
+set mousemodel=popup_setpos
+
+" UI and display tweaks
+set hlsearch
+set fillchars=vert:\│,fold:\·,foldsep:\│
+set shortmess=CF
+set switchbuf=uselast
+set wildoptions=pum,tagfile
+
+" Formatting and completion
+set autoindent
+set cpoptions-=_
+set formatoptions=tcqj
+set nojoinspaces
+set startofline
+set completeopt=menu,popup
+
+" Path and tag tweaks
+set path=.,,
+set tags=./tags;,tags
+set sessionoptions+=unix,slash
+set viewoptions+=unix,slash
+
+" Misc
+let g:editorconfig = 1

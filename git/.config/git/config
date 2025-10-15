@@ -1,0 +1,76 @@
+[user]
+	name = Ahmad Fajar Kusumajati
+	email = 90365537+jatifjr@users.noreply.github.com
+
+[credential]
+	helper = osxkeychain
+
+[core]
+	fsmonitor = true
+	precomposeunicode = true
+	safecrlf = warn
+	untrackedCache = true
+
+[color]
+	ui = auto
+
+[branch]
+    sort = -committerdate
+
+[commit]
+    verbose = true
+
+[diff]
+    algorithm = histogram
+	colorMoved = zebra
+	mnemonicPrefix = true
+    renames = true
+
+[fetch]
+    all = true
+    prune = true
+    pruneTags = true
+
+[help]
+    autoCorrect = prompt
+
+[init]
+	defaultBranch = main
+
+[merge]
+    conflictStyle = zdiff3
+	tool = opendiff
+
+[pull]
+    ff = only
+    rebase = true
+
+[push]
+    autoSetupRemote = true
+    default = simple
+    followTags = true
+
+[rebase]
+    autoSquash = true
+    autoStash = true
+    updateRefs = true
+
+[rerere]
+    autoUpdate = true
+    enabled = true
+
+[tag]
+    sort = version:refname
+
+[alias]
+    aa = add --all
+    br = branch -vv
+    ci = commit
+    df = diff
+    lg = log --oneline --decorate --all --graph
+    st = status -sb
+    sw = switch
+    amend = commit --amend
+    unstage = restore --staged
+    wip = !git add -A && git commit -m "WIP"
+    whoami = !git config user.name && git config user.email

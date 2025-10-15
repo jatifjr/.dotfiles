@@ -1,5 +1,10 @@
-.DS_Store
-.AppleDouble
-.LSOverride
-Icon?
-._*
+# This repository does not have a local .gitignore because a global ignore is used.
+# The global ignore file is stored in this repo at:
+#   git/.config/git/ignore
+# and is expected to be symlinked to:
+#   ~/.config/git/ignore
+#
+# On macOS, this global ignore handles system and temporary files such as:
+#   .DS_Store, Icon?, .AppleDouble, .fseventsd, .Spotlight-V100, etc.
+#
+# Repo-specific ignores can still be added here if necessary.

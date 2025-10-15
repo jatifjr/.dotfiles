@@ -1,0 +1,7 @@
+export SHELL_SESSIONS_DISABLE=1
+
+export EDITOR="${EDITOR:-vim}"
+export VISUAL="${VISUAL:-$EDITOR}"
+export LESS="${LESS:--FRXi}"
+export PAGER="${PAGER:-less}"
+export MANPAGER="${MANPAGER:-less -R}"
