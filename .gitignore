@@ -1,6 +1,6 @@
 # This repository does not have a local .gitignore because a global ignore is used.
 # The global ignore file is stored in this repo at:
-#   git/.config/git/ignore
+#   git/ignore
 # and is expected to be symlinked to:
 #   ~/.config/git/ignore
 #

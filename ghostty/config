@@ -1,0 +1,22 @@
+# Core
+macos-option-as-alt = true
+shell-integration-features = ssh-env,ssh-terminfo
+
+# Keybinds
+keybind = global:alt+enter=toggle_quick_terminal
+
+# Theme
+split-divider-color = #505050
+theme = snazzy
+
+# UI
+background-blur = 20
+background-opacity = 0.80
+font-family = SF Mono
+font-size = 14
+font-thicken = true
+quick-terminal-animation-duration = 0
+quick-terminal-position = center
+unfocused-split-opacity = 1
+window-decoration = none
+window-padding-balance = true
